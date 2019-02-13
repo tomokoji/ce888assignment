@@ -7,45 +7,84 @@ into the format which is appropriate for the following process.
 
 Author          : Tomoko Ayakawa
 Created on      : 2 February 2019
-Last modified on: 11 February 2019
+Last modified on: 13 February 2019
 ===========================================================================
 """
+import os.path
+import pandas as pd
 
 # -------------------------------------------------------------------------
 # Read feature names from the file
 # -------------------------------------------------------------------------
-def get_feature_names(fname):
+def get_column_names(fname):
+    if not(os.path.isfile(fname)):
+        print ("[ ERROR ] The file <%s> does not exists." % fname)
+        return None
+    
     # read the file
-    with open(fname, 'r') as f:
+    with open(fname, "r") as f:
         data = f.read()
 
     # split the data into lines
     lines = data.split("\n")
 
     # split the lines into feature names
-    feature_names = []
+    col_names = []
     for line in lines:
         cells = line.split(" ")
         if len(cells) > 1:
-            feature_names.append ("%s_%s" % (cells[0], cells[1]))
+            col_names.append ("%s_%s" % (cells[0], cells[1]))
 
-    feature_names.append ("Class")
+    col_names.append ("Class")
 
-    return feature_names
+    return col_names
 
 # -------------------------------------------------------------------------
-# Allow the programme to be ran from the command line.
+# Read features from the file
 # -------------------------------------------------------------------------
-def read_all ():
-    file_feature_name = "../data/human_activity/features.txt"
-    feature_names = get_feature_names (file_feature_name)
-
-    return feature_names
+def get_features(fname):
+    if not(os.path.isfile(fname)):
+        print ("[ ERROR ] The file <%s> does not exists." % fname)
+        return None
     
+    # read the file
+    with open(fname, "r") as f:
+        data = f.read()
+
+    # split data into lines
+    lines = data.split("\n")
+    
+    # split each lint into cells and obtain feature matrix
+    features = []
+    for line in lines:
+        cells = line.split(" ")
+        features.append(value for value in cells if value != "")
+
+    return pd.DataFrame(features)
+
+# -------------------------------------------------------------------------
+# Read features from the file
+# -------------------------------------------------------------------------
+def get_targets(fname):
+    if not(os.path.isfile(fname)):
+        print ("[ ERROR ] The file <%s> does not exists." % fname)
+        return None
+    
+    # read the file
+    with open(fname, 'r') as f:
+        data = f.read()
+
+    # split data into lines
+    targets = data.split("\n")
+
+    return pd.DataFrame(targets)
+
 # -------------------------------------------------------------------------
 # Allow the programme to be ran from the command line.
 # -------------------------------------------------------------------------
 if __name__ == '__main__':
     # file = open_dialogue ()
     
-    read_all ()
+    get_column_names("../data/human_activity/features.txt")
+    get_features("../data/human_activity/train/X_train.txt")
+    get_targets("../data/human_activity/train/y_train.txt")
