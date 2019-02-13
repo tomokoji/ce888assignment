@@ -42,7 +42,7 @@ def get_data(fname):
                 data.append(line.split(","))
     
     # replace the target colum name from "Results" to "class"
-    col_names = col_names[:-1] + ["class"]
+    col_names = col_names[:-1] + ["Class"]
     
     # convert the data into DataFrame
     data_df = pd.DataFrame(data)
