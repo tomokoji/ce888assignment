@@ -54,11 +54,11 @@ def get_data(fname):
     data_df = data_df.astype(float)
     
     # split the data into features and targets
-    fetures_df = data_df[data_df.columns[:-1]]
+    features_df = data_df[data_df.columns[:-1]]
     targets_df = data_df[data_df.columns[-1]]
     print (data_df.head(5))
     
-    return col_names, fetures_df, targets_df, data_df
+    return col_names, features_df, targets_df, data_df
 # -------------------------------------------------------------------------
 # Allow the programme to be ran from the command line.
 # -------------------------------------------------------------------------
