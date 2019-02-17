@@ -7,10 +7,10 @@ This repository contains deliverables of CE888 assignment1. <br>
 3. output: png files of data plot
 
 ## Usage
-The programme can be run from command line as:
+The programme can be run  in *src* directory from command line as:
  `python3 assignment1_main.py`
 <br>
 *assignment1_main.py* calls the menu to load and analyse the data.
 
 ## Demo
-Demonstration of the programme is available on *ce888_assignment1_for_demo.ipynb*.
+Demonstration of the programme is available on *ce888_assignment1_for_demo.ipynb* in *src*.
