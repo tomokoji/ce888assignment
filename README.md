@@ -3,9 +3,9 @@ This repository contains deliverables of CE888 assignment1. <br>
 
 ## Contents
 1. data: training data set collected for the assignment
-    - human_activity
-    - phishing
-    - spam
+    - human_activity (source: [Human Activity data set at UCI](https://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones))
+    - phishing (source: [Phishing website data set at UCI](https://archive.ics.uci.edu/ml/datasets/phishing+websites))
+    - spam (source: [Spambase data set at UCI](https://archive.ics.uci.edu/ml/datasets/spambase))
 2. src: python scripts to load and analyse the data
     - **assignment1_main.py**: the main script to read and analyse the data
     - **assignment1_for_demo.ipynb**: jupyter notebook for demo
