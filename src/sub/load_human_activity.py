@@ -79,8 +79,10 @@ def get_targets(fname):
 
     # split data into lines
     targets = data.split("\n")
-
-    return pd.DataFrame(targets)
+    target_df = pd.DataFrame(targets)
+    target_df.columns = ["Class"]
+    
+    return target_df
 
 # -------------------------------------------------------------------------
 # Allow the programme to be ran from the command line.
