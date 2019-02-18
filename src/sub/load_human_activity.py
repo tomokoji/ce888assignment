@@ -80,7 +80,7 @@ def get_targets(fname):
     # split data into lines
     targets = data.split("\n")
     target_df = pd.DataFrame(targets)
-    target_df.columns = ["Class"]
+    target_df = target_df.ix[:,0]
     
     return target_df
 

@@ -13,10 +13,12 @@ Last modified on: 17 February 2019
 class myVariables():
     import os
     dir_name = os.path.abspath(os.path.join(os.path.dirname(__file__),".."))
-    print (dir_name)
     
     # source file path
     data_path = dir_name + "/data/"
+    
+    # output file path 
+    out_path = dir_name + "/output/"
     
     # source file names
     ## (1) human activity data set
@@ -31,12 +33,15 @@ class myVariables():
     ## (3) phishing data set
     phishing_data_file = data_path + "phishing/Training Dataset.txt"
     
-    
-    # output file path 
-    out_path = dir_name + "/output/"
-    
-    # the number of top features to display correlation with the target
+    # the number of top features to display
+    ## correlation with the target
     crr_top = 20
     
-    # the number of top features to display feature importance
+    ## feature importance
     imp_top = 20
+
+    # Class labels
+    human_cls={1:"walking", 2:"walking upstairs", 3:"walking downstairs", \
+               4:"sitting", 5:"standing", 6:"laying"}
+    spam_cla={1:"spam", 0:"non-spam"}
+    psh_cla={-1:"phisy",1:"legitimate"}

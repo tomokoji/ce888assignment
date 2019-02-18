@@ -67,7 +67,7 @@ def get_data(fname, col_names):
     
     # separate the features and the targets
     features_df=data_df[data_df.columns[:-1]]
-    targets_df=data_df[data_df.columns[-1:]]
+    targets_df=data_df[data_df.columns[-1]]
 
     return features_df, targets_df, data_df
 # -------------------------------------------------------------------------

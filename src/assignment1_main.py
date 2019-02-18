@@ -2,7 +2,9 @@
 =========================================================================== 
                 a s s i g n m e n t 1 _ m a i n . p y
 ---------------------------------------------------------------------------
-This code loads datases and converd them into the same DataFrame format.
+This code is the main function of the programme written for CE888 
+assignment 1. It shows menus for a user and calls methods in accordance
+with the selected menu.
 
 Author          : Tomoko Ayakawa
 Created on      : 17 February 2019
