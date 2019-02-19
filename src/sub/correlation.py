@@ -58,11 +58,14 @@ def cr_bar_graph (cr_np, pic_file, labels):
     size_v = size_h * 0.5
     
     fig = plt.figure (figsize = (size_h, size_v))
+    axes = plt.gca()
     index = np.arange (len (cr_np))
     plt.bar(index, cr_np)
-    plt.title ("Correlation Coefficient with the Label", fontsize = 10)
+    plt.title ("Correlation with the Label (%s)" \
+               % pic_file.split("_")[0], fontsize = 10)
     plt.xlabel("Features", fontsize = 10)
     plt.ylabel("Correlation", fontsize = 10)
+    axes.set_ylim([-1,1])
     plt.xticks(index, labels, fontsize = 10, rotation = 90)
     plt.show ()
     
