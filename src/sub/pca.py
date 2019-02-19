@@ -2,16 +2,20 @@
 ===========================================================================
                                  p c a . p y
 ---------------------------------------------------------------------------
-This code carries out PCA and plot the data sets in 3D.
+This code carries out PCA, plot the data sets in 3D and display information
+(variance) provided by principal components.
+This code is written in reference to jupyter notebook for CE888 Lab 6. 
 
 Author          : Tomoko Ayakawa
 Created on      : 18 February 2019
-Last modified on: 18 February 2019
+Last modified on: 19 February 2019
 ===========================================================================
 """
 import sys
-import pandas as pd 
+import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
+from sklearn.decomposition import PCA as sklearnPCA
 
 sys.path.append("../")
 from conf import myVariables as VAR
@@ -20,7 +24,6 @@ from conf import myVariables as VAR
 # Set the predictors
 # -------------------------------------------------------------------------
 def pca(X, y, labels, pic_file):
-    from sklearn.decomposition import PCA as sklearnPCA
     from mpl_toolkits.mplot3d import Axes3D 
     
     # fit the data for PCA and plotting
@@ -46,16 +49,36 @@ def pca(X, y, labels, pic_file):
     plt.show()
     
     fig.savefig("%s%s_pca.png" % \
-                (VAR.out_path, pic_file), bbox_inches='tight')
+                (VAR.out_path, pic_file), bbox_inches="tight")
+
+def variance(X, pic_file):
+    pca = sklearnPCA()
+    X_pca = pca.fit_transform(X)
+    pca.explained_variance_ratio_
+    variance = pca.explained_variance_ratio_
+    n = len(variance)
+
+    fig = plt.figure () 
+    plt.bar(range(1, n+1), variance, alpha=0.5, align="center")
+    plt.step(range(1, n+1), np.cumsum(variance), where="mid")
+    plt.ylabel("Explained Variance Ratio")
+    plt.xlabel("Principal Components")
+    plt.title (pic_file.split("_")[0])
     
+    plt.show()
+
+    fig.savefig("%s%s_pca_variance.png" % \
+                (VAR.out_path, pic_file), bbox_inches="tight")
+
 # -------------------------------------------------------------------------
 # Allow the programme to be ran from the command line.
 # -------------------------------------------------------------------------
-if __name__ == '__main__':
+if __name__ == "__main__":
     import load_data as DATA
-    data_id = 0
+    data_id = 2
     col_names, features_df, targets_df, data_df, pic_file = \
         DATA.load_data(data_id=data_id)
     unique_labels = DATA.verify_data(data_df, targets_df)
 
-    pca(features_df, targets_df, unique_labels, "test")                                   
+    pca(features_df, targets_df, unique_labels, "test")
+    variance(features_df, pic_file)

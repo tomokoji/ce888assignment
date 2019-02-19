@@ -81,18 +81,28 @@ def load_data(data_id):
 # Confirm general information about the data.
 # -------------------------------------------------------------------------
 def verify_data (data_df, targets_df):
+    # count null values
     count_nan = data_df.isnull().values.sum()
     print("Number of NaN: %d" % count_nan)
 
     if data_df.isnull().values.sum() != 0:
         print ("Count NaN in rows:\n", data_df.isnull().sum(axis=1))
         print ("Count NaN in columns:\n", data_df.isnull().sum())
-    
+
+    # data shape
     print ("Data shape: ", data_df.shape)
-    
+
+    # unique labels in target
     unique_labels = np.sort(np.unique(targets_df.values))
     print ("Target labels:", unique_labels)
-    
+
+    # range of features
+    min_max =  pd.concat([pd.DataFrame(data_df.max()),\
+                          pd.DataFrame(data_df.min())],axis=1)
+    min_max.columns=["Max", "Min"]
+    min_max
+    print ("The range of features: ", min_max)
+
     return unique_labels
     
 # -------------------------------------------------------------------------
