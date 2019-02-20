@@ -17,7 +17,7 @@ sys.path.append("../")
 from conf import myVariables as VAR
 
 # -------------------------------------------------------------------------
-# Read feature names from the file
+# Read feature names from the file.
 # -------------------------------------------------------------------------
 def get_column_names(fname):
     if not(os.path.isfile(fname)):
@@ -43,7 +43,7 @@ def get_column_names(fname):
     return col_names
 
 # -------------------------------------------------------------------------
-# Read features from the file
+# Read features from the file.
 # -------------------------------------------------------------------------
 def get_features(fname):
     if not(os.path.isfile(fname)):
@@ -66,7 +66,7 @@ def get_features(fname):
     return pd.DataFrame(features)
 
 # -------------------------------------------------------------------------
-# Read features from the file
+# Read targets from the file.
 # -------------------------------------------------------------------------
 def get_targets(fname):
     if not(os.path.isfile(fname)):

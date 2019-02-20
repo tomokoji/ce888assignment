@@ -2,7 +2,7 @@
 ===========================================================================
                          c l a s s i f i e r . p y
 ---------------------------------------------------------------------------
-This code train classifers with a given data, make a prediction and
+This code train classifiers with a given data, make a prediction and
 visualise the confusion matrix of the prediction.
 
 Author          : Tomoko Ayakawa
@@ -19,7 +19,7 @@ sys.path.append("../")
 from conf import myVariables as VAR
 
 # -------------------------------------------------------------------------
-# Set the predictors
+# Set the predictors.
 # -------------------------------------------------------------------------
 def set_predictors():
     from sklearn.ensemble import ExtraTreesClassifier
@@ -34,7 +34,7 @@ def set_predictors():
     return predictors
 
 # -------------------------------------------------------------------------
-# Train a classifier and make a prediction
+# Train a classifier and make a prediction.
 # ------------------------------------------------------------------------- 
 def train(X, y, pred_id, data_id):
     from sklearn.model_selection import train_test_split
@@ -52,7 +52,7 @@ def train(X, y, pred_id, data_id):
     return y_ts, p, clf
 
 # -------------------------------------------------------------------------
-# If the data set is spam (data_id=1), normalise the data
+# If the data set is spam (data_id=1), normalise the data.
 # -------------------------------------------------------------------------
 def normalise_spam(X):
     from sklearn.preprocessing import MinMaxScaler
@@ -97,7 +97,7 @@ def plot_confusion_matrix(y, p, unique_labels, pic_file, title, clf_type):
     fig.savefig("%s%s_conf_matrix_%s.png" % \
                 (VAR.out_path, pic_file, clf_type), bbox_inches='tight')
 # -------------------------------------------------------------------------
-# Compare the predictors
+# Compare the predictors.
 # ------------------------------------------------------------------------- 
 def compare(X, y, predictors):
     from sklearn import metrics

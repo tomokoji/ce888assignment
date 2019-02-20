@@ -21,7 +21,7 @@ sys.path.append("../")
 from conf import myVariables as VAR
 
 # -------------------------------------------------------------------------
-# Set the predictors
+# Set the predictors.
 # -------------------------------------------------------------------------
 def pca(X, y, labels, pic_file):
     from mpl_toolkits.mplot3d import Axes3D 

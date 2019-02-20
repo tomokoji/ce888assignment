@@ -20,7 +20,7 @@ sys.path.append("../")
 from conf import myVariables as VAR
 
 # -------------------------------------------------------------------------
-# Get correlation matrix
+# Get correlation matrix.
 # -------------------------------------------------------------------------
 def correlation (data_df):
     cr_np = np.corrcoef (data_df.values.T)
@@ -28,7 +28,7 @@ def correlation (data_df):
     return cr_np
 
 # -------------------------------------------------------------------------
-# Show a heatmap of correlation among features
+# Show a heat map of correlation among features.
 # -------------------------------------------------------------------------
 def cr_heatmap(cr_np, pic_file, labels):
     size = len(labels) * 0.5
@@ -43,7 +43,7 @@ def cr_heatmap(cr_np, pic_file, labels):
                 bbox_inches='tight')
 
 # -------------------------------------------------------------------------
-# Show a bargraph of correlation between features and targets
+# Show a bar graph of correlation between features and targets.
 # -------------------------------------------------------------------------
 def cr_bar_graph (cr_np, pic_file, labels):
     # extract feature-target correlations from the matrix

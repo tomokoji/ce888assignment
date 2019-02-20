@@ -2,7 +2,7 @@
 ===========================================================================
                       l o a d _ p h i s h i n g . p y
 ---------------------------------------------------------------------------
-This code is read source files for phising data and process the data
+This code is read source files for phishing data and process the data
 into the format which is appropriate for the following process.
 
 Author          : Tomoko Ayakawa
@@ -44,7 +44,7 @@ def get_data(fname):
             else:
                 data.append(line.split(","))
     
-    # replace the target colum name from "Results" to "class"
+    # replace the target column name from "Results" to "class"
     col_names = col_names[:-1] + ["Class"]
     
     # convert the data into DataFrame
