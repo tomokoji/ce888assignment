@@ -1,12 +1,13 @@
 """
 ===========================================================================
-                 c l a s s i f i e r . p y
+                         c l a s s i f i e r . p y
 ---------------------------------------------------------------------------
-This code analyses feature importance based on a Decision Tree classifier.
+This code train classifers with a given data, make a prediction and
+visualise the confusion matrix of the prediction.
 
 Author          : Tomoko Ayakawa
 Created on      : 17 February 2019
-Last modified on: 17 February 2019
+Last modified on: 20 February 2019
 ===========================================================================
 """
 import sys
@@ -35,8 +36,11 @@ def set_predictors():
 # -------------------------------------------------------------------------
 # Train a classifier and make a prediction
 # ------------------------------------------------------------------------- 
-def train(X, y, pred_id):
+def train(X, y, pred_id, data_id):
     from sklearn.model_selection import train_test_split
+
+    if data_id == 1:
+        X = normalise_spam(X)
     
     predictors = set_predictors()
     clf = predictors[pred_id]
@@ -46,6 +50,16 @@ def train(X, y, pred_id):
     p = clf.predict(X_ts)
        
     return y_ts, p, clf
+
+# -------------------------------------------------------------------------
+# If the data set is spam (data_id=1), normalise the data
+# -------------------------------------------------------------------------
+def normalise_spam(X):
+    from sklearn.preprocessing import MinMaxScaler
+    scl=MinMaxScaler()
+    nrm=scl.fit_transform(X)
+
+    return nrm
 
 # -------------------------------------------------------------------------
 # Display confusion matrix.
@@ -118,7 +132,7 @@ if __name__ == '__main__':
     target= data.target
     unique_labels = np.sort(np.unique(target))
     
-    true_label, pred_label, clf = train (features, target, 0)
+    true_label, pred_label, clf = train (features, target, 0, 0)
     cnf_matrix = plot_confusion_matrix(true_label, pred_label, \
                                        unique_labels, "test", \
                                        "test plot", "DT")
