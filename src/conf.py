@@ -18,7 +18,7 @@ class myVariables():
     data_path = dir_name + "/data/"
     
     # output file path 
-    out_path = dir_name + "/output/"
+    out_path = dir_name + "/output_ass1/"
     
     # source file names
     ## (1) human activity data set
