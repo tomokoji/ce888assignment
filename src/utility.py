@@ -6,7 +6,7 @@ This file contains micellenious functions used for the CE888 assignment 2.
 
 Author          : Tomoko Ayakawa
 Created on      : 1 April 2019
-Last modified on: 1 April 2019
+Last modified on: 8 April 2019
 ===========================================================================
 """
 
@@ -30,12 +30,10 @@ def get_small_data(features_np, targets_np, min_samples=None):
     num_rows=len(features_np)
     num_cols=len(features_np[0])
     
-    if isinstance(min_samples, int):
-        min_rows=min_samples
-        ratio = (min_rows/num_rows)
-    else:
-        min_rows = 50 + 8*num_cols
-        ratio = (min_rows/num_rows) * 0.7
+    if isinstance(min_samples, int): min_rows=min_samples
+    else: min_rows = 50 + 8*num_cols
+    
+    ratio = (min_rows/num_rows)
     
     print ("ratio:", ratio)
     X, min_features, y, min_targets = \
@@ -54,7 +52,7 @@ if __name__ == '__main__':
     data_id = 0
     col_names, features_df, targets_df, data_df, pic_file = \
         DATA.load_data(data_id=data_id)
-    unique_labels = DATA.verify_data(data_df, targets_df)
+    unique_labels = DATA.verify_data(data_df, targets_df, False)
 
     min_features, min_targets=\
-        get_minimal_data(features_df.values, targets_df.values, 10) 
+        get_small_data(features_df.values, targets_df.values, 10) 

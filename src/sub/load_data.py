@@ -6,7 +6,7 @@ This code loads datases and converd them into the same DataFrame format.
 
 Author          : Tomoko Ayakawa
 Created on      : 17 February 2019
-Last modified on: 17 February 2019
+Last modified on: 8 April 2019
 ===========================================================================
 """
 import sys
@@ -80,7 +80,7 @@ def load_data(data_id):
 # -------------------------------------------------------------------------
 # Confirm general information about the data.
 # -------------------------------------------------------------------------
-def verify_data (data_df, targets_df):
+def verify_data (data_df, targets_df, dispaly_range=True):
     # count null values
     count_nan = data_df.isnull().values.sum()
     print("Number of NaN: %d" % count_nan)
@@ -92,16 +92,19 @@ def verify_data (data_df, targets_df):
     # data shape
     print ("Data shape: ", data_df.shape)
 
-    # unique labels in target
-    unique_labels = np.sort(np.unique(targets_df.values))
+    # unique labels and thier ratio in target
+    unique_labels, counts = np.unique(targets_df.values, \
+                                      return_counts=True)
+    ratio=["%.2f" % r for r in counts/sum(counts)]
     print ("Target labels:", unique_labels)
+    print ("Class distribution:", ratio)
 
     # range of features
-    min_max =  pd.concat([pd.DataFrame(data_df.max()),\
-                          pd.DataFrame(data_df.min())],axis=1)
-    min_max.columns=["Max", "Min"]
-    min_max
-    print ("The range of features: ", min_max)
+    if dispaly_range==True:
+        min_max =  pd.concat([pd.DataFrame(data_df.max()),\
+                              pd.DataFrame(data_df.min())],axis=1)
+        min_max.columns=["Max", "Min"]
+        print ("The range of features: ", min_max)
 
     return unique_labels
     
@@ -110,7 +113,7 @@ def verify_data (data_df, targets_df):
 # -------------------------------------------------------------------------
 if __name__ == '__main__':   
     col_names, features_df, targets_df, data_df, pic_file = \
-        load_data(data_id=2)
-    unique_labels = verify_data(data_df, targets_df)
+        load_data(data_id=0)
+    unique_labels = verify_data(data_df, targets_df, dispaly_range=False)
     
     print("First five rows in the data\n", data_df.head(5))
