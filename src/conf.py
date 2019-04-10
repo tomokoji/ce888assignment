@@ -61,16 +61,22 @@ class myVariables():
     # default values
     ## (1) data preparation
     def_test=0.2    # test data size
+    act_list={0:"relu", 1:"sigmoid", 2:"tanh", 3:"softmax"}
+    loss_list={0:"mse", 1: "mean_absolute_error", \
+              2: "mean_squared_logarithmic_error"}
     
     ## (2) autoencoder
     #      (dict key is the data_id 0:human acty, 1:spam, 2:phishing)
+    ae_mode=0       # autoencoder type (0:normal, 1:stacked)
     ae_epoch=20     # training epoch for autoencoders
     ae_dropout=0    # dropout rate for autoencoders
     ae_lr={0: 0.001, 1: 0.001, 2: 0.001}  # learning rate
     ae_layers={0: [55, 30, 10],  # number of neurons of each layer
                1: [55, 30, 10], 
                2: [55, 30, 10]} 
-    ae_act="relu" # activation function
-    ae_loss="mse" # loss function
-    ae_opt="adam" # optimizer
+    ae_act=0            # activation function (index of act_list)
+    ae_loss=0           # loss function (index of loss_list)
+    ae_opt="adam"       # optimizer
+    ae_verbose=1        # 0: None, 1: Display progress
+    ae_summary_display=True  # display summary of the autoencoder
     
