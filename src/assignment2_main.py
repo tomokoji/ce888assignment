@@ -8,7 +8,7 @@ with the selected menu.
 
 Author          : Tomoko Ayakawa
 Created on      : 10 April 2019
-Last modified on: 10 April 2019
+Last modified on: 16 April 2019
 ===========================================================================
 """
 
@@ -107,20 +107,20 @@ def menu():
                 print("[ ERROR ] Data preparation is not completed yet.")
                 continue
             
-            # select type of the autoencoder
-            mode=input("Select 0 for Normal Autoencoder, " \
-                       "1 for Stacked Autoencoder (default=0): ")
-            try:
-                mode=int(mode)
-            except:
-                mode=0
+            # select parameters for autoencoder
+            layers, mode, act, opt, loss, dropout, epochs, verbose, \
+                summary_display=AE.get_parameters(data_id)
+            ans=input("Continue? (y/n): ")
+            if (ans!="y") and (ans!="Y"): continue
         
-            encode, hist=AE.autoencoder(X, layers=VAR.ae_layers[data_id], \
-                mode=mode, act=VAR.ae_act, opt=VAR.ae_opt, \
-                loss=VAR.ae_loss, dropout=0, \
-                epochs=10, verbose=0, summary_display=False)
+            # train an autoencoder
+            encode, histories=AE.autoencoder(X, layers=layers, \
+                    mode=mode, act=act, opt=opt, loss=loss, \
+                    dropout=dropout, epochs=epochs, verbose=verbose, \
+                    summary_display=summary_display)
             
-            AE.plot_ae_loss_history(hist, mode, "test", save=True)
+            # display the training loss history
+            AE.plot_ae_loss_history(histories, mode, pic_file)
             ready=5         
             
             

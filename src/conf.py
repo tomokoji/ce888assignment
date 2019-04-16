@@ -6,7 +6,7 @@ This file contains configurable variables used by other python scripts.
 
 Author          : Tomoko Ayakawa
 Created on      : 17 February 2019
-Last modified on: 10 April 2019
+Last modified on: 16 April 2019
 ===========================================================================
 """
 
@@ -76,7 +76,9 @@ class myVariables():
                2: [55, 30, 10]} 
     ae_act=0            # activation function (index of act_list)
     ae_loss=0           # loss function (index of loss_list)
-    ae_opt="adam"       # optimizer
-    ae_verbose=1        # 0: None, 1: Display progress
-    ae_summary_display=True  # display summary of the autoencoder
+    ae_opt=0            # optimizer 0:adam 1:sdg
+    ae_lr=0.01          # learning rate
+    ae_momentum=0.8     # momentum
+    ae_verbose=1        # 0:False, 1: True
+    ae_summary_display=0  # 0:False, 1: True
     

@@ -13,6 +13,7 @@ Last modified on: 8 April 2019
 
 import sys
 sys.path.append("./sub")
+sys.path.append("../")
 
 # import original libraries
 from conf import myVariables as VAR
