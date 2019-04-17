@@ -13,6 +13,7 @@ Last modified on: 16 April 2019
 """
 
 import sys
+import numpy as np
 sys.path.append("./sub")
 
 # import original libraries
@@ -20,6 +21,7 @@ from conf import myVariables as VAR
 import load_data as DATA
 import preprocess as PREP
 import autoencoder as AE
+import mlp as MLP
 #import histogram as HST
 #import correlation as CRRL
 #import classifier as CLS
@@ -42,11 +44,11 @@ def menu():
               "    [Train Classifier]\n" \
               "      4) Autoencoder\n" \
               "      5) MLP\n" \
-              "----------------------------------------\n" \
+              "      6) Grid search for optimal parameter\n"
               "    [Evaluation]\n" \
-              "      8) Decision Tree\n" \
-              "      9) Naive Bayes\n" \
-              "     10) SVM\n" \
+              "      -) Decision Tree\n" \
+              "      -) Naive Bayes\n" \
+              "      -) SVM\n" \
               "    [Quit]\n" \
               "      others) Exit the menu" % ready)
 
@@ -108,42 +110,51 @@ def menu():
                 continue
             
             # select parameters for autoencoder
-            layers, mode, act, opt, loss, dropout, epochs, verbose, \
+            ae_layers, mode, act, opt, loss, dropout, epochs, verbose, \
                 summary_display=AE.get_parameters(data_id)
             ans=input("Continue? (y/n): ")
             if (ans!="y") and (ans!="Y"): continue
         
             # train an autoencoder
-            encode, histories=AE.autoencoder(X, layers=layers, \
+            encoder, histories=AE.autoencoder(X, layers=ae_layers, \
                     mode=mode, act=act, opt=opt, loss=loss, \
                     dropout=dropout, epochs=epochs, verbose=verbose, \
                     summary_display=summary_display)
             
             # display the training loss history
             AE.plot_ae_loss_history(histories, mode, pic_file)
+            
+            # obtain compressed features
+            X_all_cmp=encoder.predict(features_nrm)
+            X_tr_cmp=encoder.predict(X_tr)
+            X_te_cmp=encoder.predict(X_te)           
+            print("The number of compressed features:", len(X_all_cmp[0]))
             ready=5         
+        elif ans==5: # train an MLP
+            if ready<ans:
+                print("[ ERROR ] An autoencoder is not trained yet.")
+                continue
             
+            finetune, h_num, h_act, out_act, opt, loss, epochs, val_rate, \
+                verbose, summary_display=MLP.get_parameters()
+            ans=input("Continue? (y/n): ")
             
+            if (ans!="y") and (ans!="Y"): continue 
+            k=ae_layers[-1]
+            n=len(np.unique(y))
+            model=MLP.build_mlp(encoder, num_in=k, num_out=n, \
+                            finetune=finetune, h_num=h_num, h_act=h_act, \
+                            out_act=out_act, opt=opt, loss=loss, \
+                            summary_display=summary_display)
             
-            
-        elif ans==6:
-            if cr==False: cr_np = CRRL.correlation(data_df)
-            CRRL.cr_bar_graph (cr_np, pic_file, col_names)
-            cr=True
-        elif ans==7:
-            clf = CLS.train (features_df, targets_df, 0)[-1]
-            IMP.feature_importance(clf, col_names, pic_file, \
-                                   pic_file.split("_")[0])
-        elif ans>7:
-            cls_name={8: "Decision_Tree", 9:"Naive_Bayes", 10: "SVM"}
-            title = "%s_%s" % (pic_file.split("_")[0], cls_name[ans])
-            X, y = features_df.values, targets_df.values
-            min_ans=input("Use minimal dataset? (y/n): ")
-            if min_ans.lower()=="y":
-                X, y = get_small_data(X, y)
-            true_label, pred_label, clf = CLS.train (X, y, ans - 8)
-            CLS.plot_confusion_matrix(true_label, pred_label, \
-                             unique_labels, pic_file, title, cls_name[ans])
+            histories=MLP.train_mlp(X, y, model, epochs=epochs, \
+                            val_rate=val_rate, verbose=verbose)
+            MLP.plot_mlp_loss_history(histories, pic_file)
+            ready=6            
+        elif ans==6: # grid dsearch
+            if ready<ans:
+                print("[ ERROR ] A classifier is not trained yet.")
+                continue
 
 # -------------------------------------------------------------------------
 # Allow the programme to be ran from the command line.

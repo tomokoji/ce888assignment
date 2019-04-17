@@ -17,133 +17,65 @@ import matplotlib.pyplot as plt
 sys.path.append("../")
 # import original libraries
 from conf import myVariables as VAR
-   
+import nn_parameters as PARA
+
 # -------------------------------------------------------------------------
-# Define the parameters for the autorncoders. When skipped or an invalid 
-# value is given, the default values that are defined in conf.py are used.
+# Define the parameters for the autorncoders/MLP. When skipped or an  
+# invalid value is given, the default values that are defined in conf.py 
+# are used.
 # -------------------------------------------------------------------------
 def get_parameters(data_id):
-    from keras.optimizers import Adam, SGD
-    
-    print("Define the parameters for the autoencoder.\n" \
-          "When skipped (push enter) or an invalid value is given, the " \
-          "default value will be used.")
+    num_para=9
+    PARA.msg(num_para)
     
     # Autoencoder type
-    try:
-        mode=int(input("[Parameter 1/9: Autoencoder type] "\
-             "0:Normal or 1:Stacked (default=0): "))
-        if mode not in [0,1]: mode=VAR.ae_mode
-    except:
-        mode=VAR.ae_mode
-    
+    i=1
+    mode=PARA.ae_type(i, num_para, VAR.ae_mode)
+
     # Number of neurons in each layer
-    ae_layers=[str(i) for i in VAR.ae_layers[data_id]]
-    layers=input("[Parameter 2/9: Number of neurons in each layer] "\
-             "Integer separated by comma (default=%s): " % \
-             ",".join(ae_layers))
-    mod_layers=[]
-    try:
-        for l in layers.split(","): mod_layers.append(int(l))
-    except:
-        mod_layers=VAR.ae_layers[data_id]
-    
-    layers=mod_layers
+    i+=1
+    layers=PARA.ae_neurons(i, num_para, VAR.ae_layers[data_id])
 
     # Activation function
-    print("[Parameter 3/9: Activation function] ", end="")
-    for i in VAR.act_list.keys(): 
-        print("%d:%s " % (i, VAR.act_list[i]), end="")  
-    act=input("(default=%s): " % VAR.act_list[VAR.ae_act])
-    try:
-        act=VAR.act_list[int(act)]
-    except:
-        act=VAR.act_list[VAR.ae_act]
+    i+=1
+    act=PARA.activation(i, num_para, VAR.ae_act, "")
 
     # Optimiser
-    try:
-        opt=int(input("[Parameter 4/9: Optimiser function] "\
-             "0:adam or 1:sdg (default=%s): " % VAR.ae_opt))
-        if opt not in [0,1]: opt=VAR.ae_opt
-    except:
-       opt=VAR.ae_opt
-    if opt==0: #adam
-        try:
-            lr=float(input(" - Learning rate (default=%f): " % VAR.ae_lr))
-        except:
-            lr=VAR.ae_lr
-        opt=Adam(lr=lr)
-    else: # sdg
-        try:
-            lr=float(input(" - Learning rate (default=%f): " % VAR.ae_lr))
-        except:
-            lr=VAR.ae_lr
-        try:
-            momentum=float(input(" - Momentum (default=%f): " % \
-                                 VAR.ae_momentum))
-        except:
-            momentum=VAR.ae_momentum
-        opt=SGD(lr=lr, momentum=momentum)
-   
+    i+=1
+    opt=PARA.optimiser(i, num_para, VAR.ae_opt, VAR.ae_lr, VAR.ae_momentum)
+
     # Loss function
-    print("[Parameter 5/9: Loss function] ", end="")
-    for i in VAR.loss_list.keys(): 
-        print("%d:%s " % (i, VAR.loss_list[i]), end="")
-    loss=input("(default=%s): " % VAR.loss_list[VAR.ae_loss])
-    try:
-        loss=VAR.loss_list[int(loss)]
-    except:
-        loss=VAR.loss_list[VAR.ae_loss]
+    i+=1
+    loss=PARA.loss(i, num_para, VAR.ae_loss)
     
     # Dropout rate
-    try:
-        dropout=float(input("[Parameter 6/9: Dropout rate] 0<=rate<1 " \
-                              "(default=%f): " % VAR.ae_dropout))
-        if (dropout<0) or (dropout>=1): dropout=VAR.ae_dropout
-    except:
-            dropout=VAR.ae_dropout
+    i+=1
+    dropout=PARA.dropout(i, num_para, VAR.ae_dropout)
        
     # Trainig epochs
-    try:
-        epochs=int(input("[Parameter 7/9: Training epochs] "\
-                         "(default=%d): " % VAR.ae_epoch))
-        if epochs<0 : epochs=VAR.ae_epoch
-    except:
-        epochs=VAR.ae_epoch
-    
-    
-    
+    i+=1
+    epochs=PARA.training_epoch(i, num_para, VAR.ae_epoch)
+
     # Verbose
-    try:
-        verbose=int(input("[Parameter 8/9: Verbose] 0:None or " \
-             "1:Display (default=%d): " % VAR.ae_verbose))
-        if verbose not in [0,1]: verbose=VAR.ae_verbose
-    except:
-        verbose=VAR.ae_verbose
+    i+=1
+    verbose=PARA.display(i, num_para, VAR.ae_verbose, "Verbose")
     
     # summary_display
-    try:
-        summary_display=int(input("[Parameter 9/9: Summary display] " \
-             "0:False or 1:True (default=%d): " \
-             % VAR.ae_summary_display))
-        if summary_display not in [0,1]: 
-            summary_display=VAR.ae_summary_display
-    except:
-        summary_display=VAR.ae_summary_display
+    i+=1
+    summary_display=PARA.display(i, num_para, VAR.ae_summary_display, \
+                                 "Summary display")
     
-    mode_list={0:"Normal", 1:"Stacked"}
-    vb_list={0:"False", 1:"True"}
-    print("Parameters for the autoencoder are")
-    print(" 1. Mode: %d(%s)" % (mode, mode_list[mode]))
+    print("\nParameters for the autoencoder are")
+    print(" 1. Mode: %d(%s)" % (mode, VAR.ae_mode_list[mode]))
     print(" 2. Layers:", layers)
     print(" 3. Activation function:", act)
     print(" 4. Optimiser:", opt)
     print(" 5. Loss function:", loss)
     print(" 6. Dropout: %f" % dropout)
-    print(" 7. Epochs: %f" % epochs)
-    print(" 8. Verbose: %d(%s)" % (verbose, vb_list[verbose]))
+    print(" 7. Epochs: %d" % epochs)
+    print(" 8. Verbose: %d(%s)" % (verbose, VAR.yesno[verbose]))
     print(" 9. Summary_display: %d(%s)" % (summary_display, \
-          vb_list[summary_display]))
+          VAR.yesno[summary_display]))
     
     return layers, mode, act, opt, loss, dropout, epochs, verbose, \
            summary_display
@@ -156,7 +88,8 @@ def get_parameters(data_id):
 # -------------------------------------------------------------------------
 def autoencoder(X, layers, mode, act=VAR.ae_act, opt=VAR.ae_opt, \
                 loss=VAR.ae_loss, dropout=VAR.ae_dropout, \
-                epochs=VAR.ae_epoch, verbose=1, summary_display=False): 
+                epochs=VAR.ae_epoch, verbose=VAR.ae_verbose, \
+                summary_display=VAR.ae_summary_display): 
     
     from keras.models import Sequential, Model
     from keras.layers import Dense, Input, Dropout
@@ -175,7 +108,7 @@ def autoencoder(X, layers, mode, act=VAR.ae_act, opt=VAR.ae_opt, \
     layers.insert (0, num_features)
     
     # --------------------------------------------------------------------
-    # normal autoencoder
+    # basic autoencoder
     # --------------------------------------------------------------------
     if mode==0: 
         #initialise the decoder variables
@@ -209,22 +142,24 @@ def autoencoder(X, layers, mode, act=VAR.ae_act, opt=VAR.ae_opt, \
         #train the autoencoder
         loss_hiss=[autoencoder.fit(X, X, epochs=epochs, verbose=verbose)]
         
+        # extract the encoder from the trained autoencoder
+        encoder=Model(input=input_holder, output=encoder)
+        
         if summary_display: print(autoencoder.summary())
         
         return encoder, loss_hiss
     
     # --------------------------------------------------------------------
-    # normal autoencoder
+    # stacked autoencoder
     # --------------------------------------------------------------------
     elif mode==1:
         tmp_holder=input_holder
         x=X
         stk_encoders, loss_hist=[],[]
     
-        print("layers:", layers)
         #train encoder layers
         for i in range(len(layers)-1):
-            print("Training Layer %d/%d ..." % (i+1, len(layers)))
+            print("Training Layer %d/%d ..." % (i+1, len(layers)-1))
             
             encoder=Dense(layers[i+1], input_dim=layers[i], \
                            activation=act)(tmp_holder)
@@ -252,17 +187,14 @@ def autoencoder(X, layers, mode, act=VAR.ae_act, opt=VAR.ae_opt, \
             
         # connect traind encoder layers as 'encode'
         encoder=Sequential()
-        for e in stk_encoders:
-            #print(e.summary())
-            encoder.add(e)
-            print(encoder.summary())
+        for e in stk_encoders: encoder.add(e)
         
-        if summary_display: print(encoder.summary())
+        if summary_display==1: print(encoder.summary())
             
         return encoder, loss_hist
     
 # -------------------------------------------------------------------------
-# Allow the programme to be ran from the command line.
+# Plot the loss history and save it as a picture.
 # -------------------------------------------------------------------------
 def plot_ae_loss_history(histories, mode, pic_file):
     ans=input("Save training loss history as a picture? (y/n): ")
@@ -294,20 +226,20 @@ def plot_ae_loss_history(histories, mode, pic_file):
     if save==True:
         fig.savefig("%s%s_%s_ae_loss.png" % \
                    (VAR.out_path, pic_file, ae_type), bbox_inches='tight')
-
+     
 # -------------------------------------------------------------------------
 # Allow the programme to be ran from the command line.
 # -------------------------------------------------------------------------
 if __name__ == "__main__":
     X=np.random.rand(10,100)
     
-    layers, mode, act, opt, loss, dropout, epochs, verbose, \
-           summary_display=get_parameters(0)
+    ae_layers, mode, act, opt, loss, dropout, epochs, verbose, \
+           summary_display=get_parameters(data_id=0)
     
     ans=input("Continue? (y/n): ")
     
     if (ans=="y") or (ans=="Y"):
-        encode, histories=autoencoder(X, layers=layers, mode=mode,\
+        encoder, histories=autoencoder(X, layers=ae_layers, mode=mode,\
                 act=act, opt=opt, loss=loss, dropout=dropout, \
                 epochs=epochs, verbose=verbose, \
                 summary_display=summary_display)
