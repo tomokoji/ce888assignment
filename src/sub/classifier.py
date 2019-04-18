@@ -7,7 +7,7 @@ visualise the confusion matrix of the prediction.
 
 Author          : Tomoko Ayakawa
 Created on      : 17 February 2019
-Last modified on: 20 February 2019
+Last modified on: 18 April 2019
 ===========================================================================
 """
 import sys
@@ -69,6 +69,10 @@ def plot_confusion_matrix(y, p, unique_labels, pic_file, title, clf_type):
     from sklearn.metrics import confusion_matrix
     from sklearn.metrics import classification_report
     import itertools
+    
+    ans=input("Save a confusion matrix as a picture? (y/n): ")
+    if (ans=="y") or (ans=="Y"): save=True
+    else: save=False
 
     cm = confusion_matrix(y, p)
     
@@ -94,7 +98,8 @@ def plot_confusion_matrix(y, p, unique_labels, pic_file, title, clf_type):
     plt.show()
     print(classification_report(y, p))
     
-    fig.savefig("%s%s_conf_matrix_%s.png" % \
+    if save==True:
+        fig.savefig("%s%s_conf_matrix_%s.png" % \
                 (VAR.out_path, pic_file, clf_type), bbox_inches='tight')
 # -------------------------------------------------------------------------
 # Compare the predictors.

@@ -23,6 +23,7 @@ import preprocess as PREP
 import autoencoder as AE
 import mlp as MLP
 import grid_search as GS
+import pca as PCA
 #import histogram as HST
 #import correlation as CRRL
 #import classifier as CLS
@@ -41,15 +42,17 @@ def menu():
               "      0) Load Data\n" \
               "      1) Obtain small data\n" \
               "      2) Pre-process the data\n" \
-              "      3) Split the data\n" \
-              "    [Train Classifier]\n" \
+              "      3) Split the data to training and test datasets\n" \
+              "    [Build and Train Classifier]\n" \
               "      4) Autoencoder\n" \
               "      5) MLP\n" \
               "      6) Grid search for optimal parameter\n"
               "    [Evaluation]\n" \
               "      7) Cross Validation of the classifier\n" \
-              "      -) Naive Bayes\n" \
-              "      -) SVM\n" \
+              "      8) Predict and validate with test dataset\n" \
+              "    [Comparison]\n" \
+              "      9) PCA vs. Autoencoder: 3D visualisation\n" \
+              "     10) Other classifiers: prediction of test data\n" \
               "    [Quit]\n" \
               "      others) Exit the menu" % ready)
 
@@ -147,14 +150,14 @@ def menu():
                             finetune=finetune, h_num=h_num, h_act=h_act, \
                             out_act=out_act, opt=opt, loss=loss, \
                             summary_display=summary_display)
-            ready=7
+            ready=10
             
             ans=input("Continueto train the MLP? (y/n): ")
             if (ans!="y") and (ans!="Y"): continue 
             histories=MLP.train_mlp(X, y, model, epochs=epochs, \
                             val_rate=val_rate, verbose=verbose)
             MLP.plot_mlp_loss_history(histories, pic_file)
-        elif ans==6: # grid dsearch
+        elif ans==6: # grid dsearch using the compressed features
             if ready<ans:
                 print("[ ERROR ] A classifier is not built yet.")
                 continue
@@ -169,12 +172,30 @@ def menu():
                            max_iter=max_itr, learning_rate_init=lr, \
                            momentum=mmt, solver=solver)
             if param_grid!=1:
-                GS.grid_search(X, y, clf, param_grid, grid_splits=splits)  
+                GS.grid_search(X_all_cmp, y, clf, param_grid, \
+                               grid_splits=splits)  
         elif ans==7: # cross validation
             if ready<ans:
                 print("[ ERROR ] A classifier is not built yet.")
                 continue
             accs, fscores=MLP.cross_validation(model, X, y, epochs=epochs)
+        elif ans==8: # cross validation
+            if ready<ans:
+                print("[ ERROR ] A classifier is not built yet.")
+                continue 
+            pred=MLP.evaluation(model, X_tr, y_tr, X_te, y_te, pic_file)
+        elif ans==9: # comparison with PCA
+            if ready<5:
+                print("[ ERROR ] Compressed features are not obtained yet.")
+                continue 
+            if ae_layers[-1]!=3:
+                print("[ ERROR ] Compressed feature dimentionality " \
+                      "should be 3, but data", X_tr.shape, "are given.")
+                continue
+            PCA.pca(X_all_cmp, y, unique_labels, \
+                    "Compressed by autoencoder", PCA=False)
+        elif ans==10: # comparison with other classifiers
+            continue   
 # -------------------------------------------------------------------------
 # Allow the programme to be ran from the command line.
 # -------------------------------------------------------------------------

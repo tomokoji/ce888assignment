@@ -69,7 +69,7 @@ def get_parameters():
     print(" 3. Maximum iteration: %d" % max_itr)
     print(" 4. Learning rate: %f)" % lr)
     print(" 5. Momentum: %f)" % mmt)
-    print(" 6. Regularization parameter: %f)" % alpha)
+    print(" 6. Regularization parameter: %f" % alpha)
     print(" 7. Solver:", solver)
     print(" 8. Number of splits:", splits)
     

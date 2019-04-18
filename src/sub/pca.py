@@ -23,12 +23,14 @@ from conf import myVariables as VAR
 # -------------------------------------------------------------------------
 # Set the predictors.
 # -------------------------------------------------------------------------
-def pca(X, y, labels, pic_file):
+def pca(X, y, labels, pic_file, PCA=True):
     from mpl_toolkits.mplot3d import Axes3D 
     
     # fit the data for PCA and plotting
+    # when PCA=False, plot the original data into 3D
     pca = sklearnPCA (n_components = 3) 
-    X_pca = pd.DataFrame (pca.fit_transform (X)) 
+    if PCA==True: X_pca = pd.DataFrame (pca.fit_transform (X)) 
+    else: X_pca=X
 
     # colors and markers for each class
     colors = {0:"b", 1:"r", 2:"g", 3:"c", 4:"m", 5:"k"}
@@ -36,6 +38,10 @@ def pca(X, y, labels, pic_file):
     num_labels = len(labels)
     
     #Set a figure object
+    ans=input("Save 3D plot of samples as a picture? (y/n): ")
+    if (ans=="y") or (ans=="Y"): save=True
+    else: save=False
+    
     fig = plt.figure (figsize = (10, 10)) 
     ax = fig.add_subplot (111, projection = "3d")
     
@@ -48,8 +54,9 @@ def pca(X, y, labels, pic_file):
     
     plt.show()
     
-    fig.savefig("%s%s_pca.png" % \
-                (VAR.out_path, pic_file), bbox_inches="tight")
+    if save==True:
+        fig.savefig("%s%s_pca.png" % (VAR.out_path, pic_file), \
+                bbox_inches="tight")
 
 def variance(X, pic_file):
     pca = sklearnPCA()
