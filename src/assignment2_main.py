@@ -8,7 +8,7 @@ with the selected menu.
 
 Author          : Tomoko Ayakawa
 Created on      : 10 April 2019
-Last modified on: 16 April 2019
+Last modified on: 18 April 2019
 ===========================================================================
 """
 
@@ -22,6 +22,7 @@ import load_data as DATA
 import preprocess as PREP
 import autoencoder as AE
 import mlp as MLP
+import grid_search as GS
 #import histogram as HST
 #import correlation as CRRL
 #import classifier as CLS
@@ -46,7 +47,7 @@ def menu():
               "      5) MLP\n" \
               "      6) Grid search for optimal parameter\n"
               "    [Evaluation]\n" \
-              "      -) Decision Tree\n" \
+              "      7) Cross Validation of the classifier\n" \
               "      -) Naive Bayes\n" \
               "      -) SVM\n" \
               "    [Quit]\n" \
@@ -137,8 +138,8 @@ def menu():
             
             finetune, h_num, h_act, out_act, opt, loss, epochs, val_rate, \
                 verbose, summary_display=MLP.get_parameters()
-            ans=input("Continue? (y/n): ")
-            
+                
+            ans=input("Continue to build the MLP? (y/n): ")
             if (ans!="y") and (ans!="Y"): continue 
             k=ae_layers[-1]
             n=len(np.unique(y))
@@ -146,16 +147,34 @@ def menu():
                             finetune=finetune, h_num=h_num, h_act=h_act, \
                             out_act=out_act, opt=opt, loss=loss, \
                             summary_display=summary_display)
+            ready=7
             
+            ans=input("Continueto train the MLP? (y/n): ")
+            if (ans!="y") and (ans!="Y"): continue 
             histories=MLP.train_mlp(X, y, model, epochs=epochs, \
                             val_rate=val_rate, verbose=verbose)
             MLP.plot_mlp_loss_history(histories, pic_file)
-            ready=6            
         elif ans==6: # grid dsearch
             if ready<ans:
-                print("[ ERROR ] A classifier is not trained yet.")
+                print("[ ERROR ] A classifier is not built yet.")
                 continue
-
+            
+            act, h_num, max_itr, lr, mmt, alpha, solver, splits=\
+                GS.get_parameters()
+            
+            ans=input("Continue? (y/n): ")
+            if (ans!="y") and (ans!="Y"): continue 
+            param_grid, clf=GS.parameter_grid(activation=act, \
+                           alpha=alpha, hidden_layer_sizes=(h_num,), \
+                           max_iter=max_itr, learning_rate_init=lr, \
+                           momentum=mmt, solver=solver)
+            if param_grid!=1:
+                GS.grid_search(X, y, clf, param_grid, grid_splits=splits)  
+        elif ans==7: # cross validation
+            if ready<ans:
+                print("[ ERROR ] A classifier is not built yet.")
+                continue
+            accs, fscores=MLP.cross_validation(model, X, y, epochs=epochs)
 # -------------------------------------------------------------------------
 # Allow the programme to be ran from the command line.
 # -------------------------------------------------------------------------

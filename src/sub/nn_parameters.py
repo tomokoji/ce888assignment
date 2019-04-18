@@ -6,7 +6,7 @@ This code is to obtain parameters for neural networks (autoencoder, MLP).
 
 Author          : Tomoko Ayakawa
 Created on      : 17 April 2019
-Last modified on: 17 April 2019
+Last modified on: 18 April 2019
 ===========================================================================
 """
 import sys
@@ -31,7 +31,7 @@ def msg(num_para):
 def ae_type(i, j, default): # Autoencoder type
     try:
         mode=int(input("[Parameter %d/%d: Autoencoder type] "\
-             "0:Normal or 1:Stacked (default=0): " % (i, j)))
+             "0:Normal or 1:Stacked (default=%d): " % (i, j, default)))
         if mode not in [0,1]: mode=default
     except:
         mode=default
@@ -83,10 +83,11 @@ def optimiser(i, j, default, def_lr, def_mom): # Optimiser
     opt=input("(default=%s): " % VAR.opt_list[default])
         
     try:
-        opt=VAR.opt_list[int(opt)]
+        opt=int(opt)
     except:
         opt=default
-       
+    
+    if def_lr==-1: return VAR.opt_list[opt]
     if opt==0: #adam
         try:
             lr=float(input(" - Learning rate (default=%f): " % def_lr))
@@ -118,15 +119,15 @@ def loss(i, j, default):  # Loss function
     
     return loss
     
-def dropout(i, j, default): # Dropout rate
+def floatvalue(i, j, default, item): # Floatinf point values
     try:
-        dropout=float(input("[Parameter %d/%d: Dropout rate] 0<=rate<1 " \
-                              "(default=%f): " % (i, j, default)))
-        if (dropout<0) or (dropout>=1): dropout=default
+        fl=float(input("[Parameter %d/%d: %s] 0<=rate<1 " \
+                              "(default=%f): " % (i, j, item, default)))
+        if (fl<0) or (fl>=1): fl=default
     except:
-            dropout=default
+            fl=default
     
-    return dropout
+    return fl
 
 def validation(i, j, default): # Dropout rate
     try:
@@ -138,10 +139,10 @@ def validation(i, j, default): # Dropout rate
     
     return val
        
-def training_epoch(i, j, default): # Trainig epochs
+def integer(i, j, default, item): # Trainig epochs
     try:
-        epochs=int(input("[Parameter %d/%d: Training epochs] "\
-                         "(default=%d): " % (i, j, default)))
+        epochs=int(input("[Parameter %d/%d: %s] "\
+                         "(default=%d): " % (i, j, item, default)))
         if epochs<0 : epochs=default
     except:
         epochs=default

@@ -7,7 +7,7 @@ This code is to build and train an malti layer perceotron as a classifier
 
 Author          : Tomoko Ayakawa
 Created on      : 17 April 2019
-Last modified on: 17 April 2019
+Last modified on: 18 April 2019
 ===========================================================================
 """
 import sys
@@ -56,7 +56,7 @@ def get_parameters():
        
     # Trainig epochs
     i+=1
-    epochs=PARA.training_epoch(i, num_para, VAR.mlp_epoch)
+    epochs=PARA.integer(i, num_para, VAR.mlp_epoch, "Training epochs")
     
     # Validation rate
     i+=1
@@ -179,26 +179,60 @@ def plot_mlp_loss_history(histories, pic_file):
 # Cross validation of the model to obrain accuracy with 95% confidence 
 # interval.
 # -------------------------------------------------------------------------
-def cross_validation(X, y, CV):
-    from keras.wrappers.scikit_learn import KerasClassifier
-    from sklearn.model_selection import cross_val_score
-
-    estimator=KerasClassifier(build_fn=CV, epochs=100, verbose=0)
-    y=multi_class(y)
-    scores=cross_val_score(estimator, X, y, cv=5)
+def cross_validation(estimator, X, y, epochs=VAR.mlp_epoch):
+    from sklearn.metrics import accuracy_score, f1_score
+    accs, fscores=[], []
     
-    print("Accuracy (95%% confidence interval): %0.2f (+/- %0.2f)" \
-          % (scores.mean(), scores.std() * 2))
+    cv=PARA.integer(1, 1, VAR.cv, "Number of cross validation folds")
     
-    return scores
+    # split the data into cv-folds
+    val_size=len(X)//cv+1
+    X_folds, y_folds=[], []
+    for i in range(cv):
+        s=i*val_size
+        e=(i+1)*val_size
+        if i==cv-1: e=None
+        X_folds.append(X[s:e])
+        y_folds.append(y[s:e])
+    
+    # train and validate the classifier 
+    for i in range(cv):
+        # prepare training and validation datasets
+        tr_X, tr_y=[],[]
+        for j in range(cv):
+            if j!=i:
+                if tr_X==[]: tr_X, tr_y=X_folds[j], y_folds[j]
+                else: 
+                    tr_X=np.concatenate((tr_X, X_folds[j]), axis=0)
+                    tr_y=np.concatenate((tr_y, y_folds[j]), axis=0)
+        te_X, te_y=X_folds[i], y_folds[i]
+        
+        train_mlp(tr_X, tr_y, estimator, epochs=epochs, verbose=0)
+        
+        # make a prediction and decode the resutls
+        pred=estimator.predict(te_X)
+        pred_df=pd.DataFrame(pred, columns=np.unique(te_y))
+        pred=pred_df.idxmax(axis=1)
+        
+        accs.append(accuracy_score(te_y, pred))
+        fscores.append(f1_score(te_y, pred, average='weighted'))
+    
+    accs=np.array(accs)
+    fscores=np.array(fscores)
+    print("Evaluation metrics (95%% confidence interval)\n" \
+          "  Accuracy: %0.2f (+/- %0.2f)\n" \
+          "  F-score : %0.2f (+/- %0.2f)" % (accs.mean(), accs.std()*2, \
+                              fscores.mean(), fscores.std()*2))
+   
+    return accs, fscores
 # -------------------------------------------------------------------------
 # Allow the programme to be ran from the command line.
 # -------------------------------------------------------------------------
 if __name__ == "__main__":
     import autoencoder as AE
     
-    X=np.random.rand(10,100)
-    y=[0,1,2,3,4]*2
+    X=np.random.rand(50,100)
+    y=[0,1,2,3,4]*10
     
     finetune, h_num, h_act, out_act, opt, loss, epochs, val_rate, \
         verbose, summary_display=get_parameters()
@@ -225,5 +259,5 @@ if __name__ == "__main__":
     
         plot_mlp_loss_history(histories, "test")
 
-        #scores=mlp.cross_validation(X, y)
+        accs, fscores=cross_validation(model, X, y, epochs=epochs)
         

@@ -6,7 +6,7 @@ This code is to build and train an autoencoder for feature learning.
 
 Author          : Tomoko Ayakawa
 Created on      : 29 March 2019
-Last modified on: 16 April 2019
+Last modified on: 18 April 2019
 ===========================================================================
 """
 import sys
@@ -50,11 +50,11 @@ def get_parameters(data_id):
     
     # Dropout rate
     i+=1
-    dropout=PARA.dropout(i, num_para, VAR.ae_dropout)
+    dropout=PARA.floatvalue(i, num_para, VAR.ae_dropout, "Dropout rate")
        
     # Trainig epochs
     i+=1
-    epochs=PARA.training_epoch(i, num_para, VAR.ae_epoch)
+    epochs=PARA.integer(i, num_para, VAR.ae_epoch, "Training epochs")
 
     # Verbose
     i+=1
