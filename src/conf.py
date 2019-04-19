@@ -6,7 +6,7 @@ This file contains configurable variables used by other python scripts.
 
 Author          : Tomoko Ayakawa
 Created on      : 17 February 2019
-Last modified on: 17 April 2019
+Last modified on: 19 April 2019
 ===========================================================================
 """
 
@@ -63,17 +63,17 @@ class myVariables():
     def_test=0.2    # test data size
     
     act_list={0:"relu", 1:"sigmoid", 2:"tanh", 3:"softmax"}
-    loss_list={0:"mse", 1: "mean_absolute_error", \
-              2: "mean_squared_logarithmic_error", \
-              3: "categorical_crossentropy"}
+    loss_list={0:"mse", 1:"mean_absolute_error", \
+              2:"mean_squared_logarithmic_error", \
+              3:"categorical_crossentropy"}
     opt_list={0:"adam", 1:"sdg"}
     
     ## (2) autoencoder
     #      (dict key is the data_id 0:human acty, 1:spam, 2:phishing)
     yesno={0:"False", 1:"True"}
-    ae_mode_list={0:"Normal", 1:"Stacked"}
+    ae_mode_list={0:"Basic", 1:"Stacked"}
     ae_mode=1       # autoencoder type (0:normal, 1:stacked)
-    ae_epoch=20     # training epoch for autoencoders
+    ae_epoch=100    # training epoch for autoencoders
     ae_dropout=0    # dropout rate for autoencoders
     ae_layers={0: [500, 400, 300, 200, 100, 50, 25, 10],  # number of 
                1: [50, 40, 30, 20, 10],                   # neurons of 
@@ -81,8 +81,8 @@ class myVariables():
     ae_act=0            # activation function (index of act_list)
     ae_loss=0           # loss function (index of loss_list)
     ae_opt=0            # optimizer 0:adam 1:sdg
-    ae_lr=0.01          # learning rate
-    ae_momentum=0.8     # momentum
+    ae_lr=0.001         # learning rate
+    ae_momentum=0.9     # momentum
     ae_verbose=0       # 0:False, 1: True
     ae_summary_display=0  # 0:False, 1: True
     
@@ -92,8 +92,8 @@ class myVariables():
     out_act=3              # activation function (index of act_list)
     mlp_loss=3             # loss function (index of loss_list)
     mlp_opt=0              # optimizer 0:adam 1:sdg
-    mlp_lr=0.01            # learning rate
-    mlp_momentum=0.8       # momentum
+    mlp_lr=0.001            # learning rate
+    mlp_momentum=0.9       # momentum
     val_rate=0.2           # validation rate
     mlp_epoch=20           # training epoch for autoencoders
     mlp_verbose=0          # 0:False, 1: True

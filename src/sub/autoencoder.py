@@ -105,23 +105,24 @@ def autoencoder(X, layers, mode, act=VAR.ae_act, opt=VAR.ae_opt, \
     #input_holder=Input(shape=(num_features,))
         
     #initialise the encoder variables
-    layers.insert (0, num_features)
+    layers_copy=[num_features]
+    for l in layers: layers_copy.append(l)
     
     # --------------------------------------------------------------------
     # basic autoencoder
     # --------------------------------------------------------------------
     if mode==0: 
         #initialise the decoder variables
-        n=len(layers)
+        n=len(layers_copy)
         layers_dec=[]
         
-        for i in range(n-1, 0, -1): layers_dec.append(layers[i])     
+        for i in range(n-1, 0, -1): layers_dec.append(layers_copy[i])     
         layers_dec.append(num_features)
         
         #build an encoder
         encoder=input_holder
         for i in range (0, n-1):            
-            encoder=Dense(layers[i+1], input_dim=layers[i], \
+            encoder=Dense(layers_copy[i+1], input_dim=layers_copy[i], \
                          activation=act)(encoder)
             
             # add dropout
@@ -158,14 +159,14 @@ def autoencoder(X, layers, mode, act=VAR.ae_act, opt=VAR.ae_opt, \
         stk_encoders, loss_hist=[],[]
     
         #train encoder layers
-        for i in range(len(layers)-1):
-            print("Training Layer %d/%d ..." % (i+1, len(layers)-1))
+        for i in range(len(layers_copy)-1):
+            print("Training Layer %d/%d ..." % (i+1, len(layers_copy)-1))
             
-            encoder=Dense(layers[i+1], input_dim=layers[i], \
+            encoder=Dense(layers_copy[i+1], input_dim=layers_copy[i], \
                            activation=act)(tmp_holder)
             if dropout!=0: encoder=Dropout(dropout)(encoder)
                 
-            decoder=Dense(layers[i], input_dim=layers[i+1], \
+            decoder=Dense(layers_copy[i], input_dim=layers_copy[i+1], \
                            activation=act)(encoder)
             
             autoencoder=Model(input=tmp_holder, output=decoder)
@@ -180,7 +181,7 @@ def autoencoder(X, layers, mode, act=VAR.ae_act, opt=VAR.ae_opt, \
             x=encoder.predict(x)
             
             # update the input_holder
-            tmp_holder=Input(shape=(layers[i+1],))
+            tmp_holder=Input(shape=(layers_copy[i+1],))
         
             # store the trainined layer in a list
             stk_encoders.append(encoder)
@@ -197,14 +198,16 @@ def autoencoder(X, layers, mode, act=VAR.ae_act, opt=VAR.ae_opt, \
 # Plot the loss history and save it as a picture.
 # -------------------------------------------------------------------------
 def plot_ae_loss_history(histories, mode, pic_file):
+    import matplotlib.ticker as ticker
+    
     ans=input("Save training loss history as a picture? (y/n): ")
     if (ans=="y") or (ans=="Y"): save=True
     else: save=False 
 
     # define grid
     n=len(histories)
-    if n>2:
-        col=2
+    if n>4:
+        col=4
         row=n//col+1
     else:
         row, col=1, n
@@ -220,6 +223,8 @@ def plot_ae_loss_history(histories, mode, pic_file):
         if mode==1: title="Layer %d " % (i+1)
         else: title=""
         plt.title("%s Autoencoder %sTraining Loss" % (ae_type, title))
+        plt.gca().get_xaxis().set_major_locator(ticker.MaxNLocator
+               (integer=True))
     
     plt.show ()
     

@@ -243,7 +243,7 @@ def evaluation(estimetor, X_tr, y_tr, X_te, y_te, pic_file):
     # evaluattion metrics
     acc=metrics.accuracy_score(y_te, pred)
     f=metrics.f1_score(y_te, pred, average='weighted')
-    results=pd.DataFrame([[acc, f]], index=[""], \
+    results=pd.DataFrame([[acc, f]], index=["Autoencoder"], \
                          columns=["Accuracy", "Wighted F-1"])
     print("Train with %d samples, Test with %d samples" % \
           (len(X_tr), len(X_te)))

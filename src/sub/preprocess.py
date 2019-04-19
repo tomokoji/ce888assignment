@@ -7,7 +7,7 @@ Part of the functions are reused from assignment1_main.py.
 
 Author          : Tomoko Ayakawa
 Created on      : 1 April 2019
-Last modified on: 8 April 2019
+Last modified on: 19 April 2019
 ===========================================================================
 """
 
@@ -46,7 +46,10 @@ def get_small_data(X, y):
     if ((n<=0) or (n>num_rows)): n=minimal
     
     #split the data
-    X, features, y, targets = \
+    if n==num_rows:
+        features, targets=X, y
+    else:
+        X, features, y, targets = \
             train_test_split(X, y, test_size=n/num_rows)
     
     print (" - Number of features: %d\n" \

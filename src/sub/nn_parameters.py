@@ -26,7 +26,7 @@ from conf import myVariables as VAR
 def msg(num_para):
     print("Define %d parameters for the autoencoder.\n" \
           "When skipped (push enter) or an invalid value is given, the " \
-          "default value will be used.\n" % num_para)
+          "default value will be used.\n" % num_para, end="")
     
 def ae_type(i, j, default): # Autoencoder type
     try:
@@ -41,7 +41,7 @@ def ae_type(i, j, default): # Autoencoder type
 def ae_neurons(i, j, default): # Number of neurons of autoencoder
     layers=[str(k) for k in default]
     layers=input("[Parameter %d/%d: Number of neurons in each layer] "\
-             "Integer separated by comma (default=%s): " % \
+             "Integers separated by comma (default=%s): " % \
              (i, j, ",".join(layers)))
     
     mod_layers=[]

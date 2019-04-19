@@ -8,26 +8,21 @@ with the selected menu.
 
 Author          : Tomoko Ayakawa
 Created on      : 10 April 2019
-Last modified on: 18 April 2019
+Last modified on: 19 April 2019
 ===========================================================================
 """
 
 import sys
-import numpy as np
+import keras
 sys.path.append("./sub")
 
 # import original libraries
-from conf import myVariables as VAR
 import load_data as DATA
 import preprocess as PREP
 import autoencoder as AE
 import mlp as MLP
 import grid_search as GS
-import pca as PCA
-#import histogram as HST
-#import correlation as CRRL
-#import classifier as CLS
-#import feature_importance as IMP
+import comparison as CMP
 
 # -------------------------------------------------------------------------
 # Repeat showing a menu
@@ -41,7 +36,7 @@ def menu():
               "    [Prepare Data]\n" \
               "      0) Load Data\n" \
               "      1) Obtain small data\n" \
-              "      2) Pre-process the data\n" \
+              "      2) Normalise/standerdise the data\n" \
               "      3) Split the data to training and test datasets\n" \
               "    [Build and Train Classifier]\n" \
               "      4) Autoencoder\n" \
@@ -52,7 +47,8 @@ def menu():
               "      8) Predict and validate with test dataset\n" \
               "    [Comparison]\n" \
               "      9) PCA vs. Autoencoder: 3D visualisation\n" \
-              "     10) Other classifiers: prediction of test data\n" \
+              "     10) Classification accuracy of DT, NB, SVM and NN \n" \
+              "         with test data\n" \
               "    [Quit]\n" \
               "      others) Exit the menu" % ready)
 
@@ -103,7 +99,7 @@ def menu():
             ready=3
         elif ans==3: # split the data into training and test datasets
             if ready<ans:
-                print("[ ERROR ] Data is not pre-processed yet.")
+                print("[ ERROR ] Data is not normalised yet.")
                 continue
             X_tr, X_te, y_tr, y_te=PREP.split_data(features_nrm, classes)
             X, y=features_nrm, classes
@@ -129,7 +125,7 @@ def menu():
             AE.plot_ae_loss_history(histories, mode, pic_file)
             
             # obtain compressed features
-            X_all_cmp=encoder.predict(features_nrm)
+            X_all_cmp=encoder.predict(X)
             X_tr_cmp=encoder.predict(X_tr)
             X_te_cmp=encoder.predict(X_te)           
             print("The number of compressed features:", len(X_all_cmp[0]))
@@ -139,20 +135,17 @@ def menu():
                 print("[ ERROR ] An autoencoder is not trained yet.")
                 continue
             
-            finetune, h_num, h_act, out_act, opt, loss, epochs, val_rate, \
-                verbose, summary_display=MLP.get_parameters()
+            finetune, h_num, h_act, out_act, opt, loss, epochs, \
+                val_rate, verbose, summary_display=MLP.get_parameters()
                 
-            ans=input("Continue to build the MLP? (y/n): ")
-            if (ans!="y") and (ans!="Y"): continue 
-            k=ae_layers[-1]
-            n=len(np.unique(y))
-            model=MLP.build_mlp(encoder, num_in=k, num_out=n, \
-                            finetune=finetune, h_num=h_num, h_act=h_act, \
+            model=MLP.build_mlp(encoder, num_in=ae_layers[-1], \
+                            num_out=len(unique_labels), finetune=finetune,\
+                            h_num=h_num, h_act=h_act, \
                             out_act=out_act, opt=opt, loss=loss, \
                             summary_display=summary_display)
-            ready=10
+            ready=9
             
-            ans=input("Continueto train the MLP? (y/n): ")
+            ans=input("Continue to train the MLP? (y/n): ")
             if (ans!="y") and (ans!="Y"): continue 
             histories=MLP.train_mlp(X, y, model, epochs=epochs, \
                             val_rate=val_rate, verbose=verbose)
@@ -183,7 +176,9 @@ def menu():
             if ready<ans:
                 print("[ ERROR ] A classifier is not built yet.")
                 continue 
-            pred=MLP.evaluation(model, X_tr, y_tr, X_te, y_te, pic_file)
+            pred=MLP.evaluation(model, X_tr, y_tr, X_te, y_te, \
+                                         pic_file)
+            ready=10
         elif ans==9: # comparison with PCA
             if ready<5:
                 print("[ ERROR ] Compressed features are not obtained yet.")
@@ -192,9 +187,22 @@ def menu():
                 print("[ ERROR ] Compressed feature dimentionality " \
                       "should be 3, but data", X_tr.shape, "are given.")
                 continue
-            PCA.pca(X_all_cmp, y, unique_labels, \
-                    "Compressed by autoencoder", PCA=False)
+            CMP.plot_3D(X, X_all_cmp, y)
         elif ans==10: # comparison with other classifiers
+            if ready<ans:
+                print("[ ERROR ] Obtain the classification result of "\
+                      "the autoencoder (Menu 8).")
+                continue 
+            # original data (uncompressed)
+            ans=input("Use the original (uncompressed) data? (y/n): ")
+            if (ans!="y") and (ans!="Y"): continue 
+            CMP.performance_comparison(pred, X_tr, X_te, y_tr, y_te, \
+                                       pic_file, data_id)
+            # compressed data
+            ans=input("Use the compressed data? (y/n): ")
+            if (ans!="y") and (ans!="Y"): continue 
+            CMP.performance_comparison(pred, X_tr_cmp, X_te_cmp, y_tr, \
+                                       y_te, pic_file, data_id)
             continue   
 # -------------------------------------------------------------------------
 # Allow the programme to be ran from the command line.

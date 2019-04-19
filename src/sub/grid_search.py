@@ -6,13 +6,12 @@ This code is to carry out grid-search for the optimal parameters of MLP.
 
 Author          : Tomoko Ayakawa
 Created on      : 18 April 2019
-Last modified on: 18 April 2019
+Last modified on: 19 April 2019
 ===========================================================================
 """
 import sys
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
 
 sys.path.append("../")
 # import original libraries
