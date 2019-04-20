@@ -1,0 +1,14 @@
+,activation,Accuracy
+Fold- 1,tanh,0.76
+Fold- 2,tanh,0.65
+Fold- 3,tanh,0.73
+Fold- 4,tanh,0.61
+Fold- 5,tanh,0.68
+Fold- 6,relu,0.61
+Fold- 7,relu,0.66
+Fold- 8,tanh,0.64
+Fold- 9,tanh,0.67
+Fold-10,tanh,0.73
+---,---,---
+mean,N/A,0.674
+modes,tanh,N/A

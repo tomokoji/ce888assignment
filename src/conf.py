@@ -99,9 +99,9 @@ class myVariables():
     mlp_verbose=0          # 0:False, 1: True
     mlp_summary_display=0  # 0:False, 1: True
     finetune=0             # 0:False, 1: True
-    cv=5                   # number of folds for cross validation
+    cv=10                  # number of folds for cross validation
     
     ## (4) Grid Search
-    grid_splits=2          # number of grid split
+    grid_splits=10          # number of grid split
     alpha=1                # reguralization parameter
     

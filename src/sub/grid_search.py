@@ -24,7 +24,7 @@ import nn_parameters as PARA
 # are used.
 # -------------------------------------------------------------------------
 def get_parameters():
-    num_para=8
+    num_para=6
     PARA.msg(num_para)
 
     # Activation function of a hidden layer
@@ -42,16 +42,7 @@ def get_parameters():
     # Learning rate
     i+=1
     lr=PARA.floatvalue(i, num_para, VAR.mlp_lr, "Learning rate")
-    
-    # Momentum
-    i+=1
-    mmt=PARA.floatvalue(i, num_para, VAR.mlp_momentum, "Momentum")
-    
-    # Regularization parameter
-    i+=1
-    alpha=PARA.floatvalue(i, num_para, VAR.alpha, \
-                          "Regularization parameter")
-    
+
     # Solver
     i+=1
     solver=PARA.optimiser(i, num_para, VAR.mlp_opt, -1, -1)
@@ -66,57 +57,60 @@ def get_parameters():
     print(" 1. Activation function:", act)
     print(" 2. Hidden layer size:", h_num)
     print(" 3. Maximum iteration: %d" % max_itr)
-    print(" 4. Learning rate: %f)" % lr)
-    print(" 5. Momentum: %f)" % mmt)
-    print(" 6. Regularization parameter: %f" % alpha)
-    print(" 7. Solver:", solver)
-    print(" 8. Number of splits:", splits)
+    print(" 4. Learning rate: %f" % lr)
+    print(" 5. Solver:", solver)
+    print(" 6. Number of splits:", splits)
     
-    return act, h_num, max_itr, lr, mmt, alpha, solver, splits
+    return act, h_num, max_itr, lr, solver, splits
         
 # -------------------------------------------------------------------------
 # Set parameter grids.
 # This code is originally developed by the author for the assignment of 
 # CE802 which was submitted to the CSEE department in January 2019.           
 # -------------------------------------------------------------------------
-def parameter_grid(activation="relu", alpha=1, hidden_layer_sizes=(14,), 
-                   max_iter=100, learning_rate_init=0.0001, momentum=0.9,
-                   solver="adam"):
+def parameter_grid(activation="relu", hidden_layer_sizes=(20,), 
+                   max_iter=1000, learning_rate_init=0.001, solver="adam"):
     from sklearn.neural_network import MLPClassifier
     from sklearn.model_selection import GridSearchCV, ShuffleSplit
     
     # create an MLP instance
-    classifier=MLPClassifier(activation=activation, alpha=alpha, \
-                   hidden_layer_sizes=hidden_layer_sizes, 
-                   max_iter=max_iter, \
-                   learning_rate_init=learning_rate_init,
-                   solver=solver)
+    classifier=MLPClassifier(activation=activation, \
+               hidden_layer_sizes=hidden_layer_sizes, max_iter=max_iter, 
+               solver=solver, learning_rate_init=learning_rate_init)
+                   
     
     # set parameter grids
     Hs=[(5, ), (10, ), (15, ), (20, ), (25, ), (30, )]
     ACTs=["tanh", "relu"]
     SLOs=["sgd", "adam"]
-    ALPHAs=np.logspace(-5, 1, 7)
-    ITRs=np.linspace(50, 1000, 100, dtype=int)
-    ETAs=np.logspace(-5, -3, 3)
-    MMTs=np.logspace(-5, -3, 3)
+    ITRs=np.linspace(10, 1000, 100, dtype=int)
+    ETAs=np.logspace(-5, -1, 5)
 
     grid_list=[]
-    grid_list.append(dict(activation=ACTs, solver=SLOs))
-    grid_list.append(dict(learning_rate_init=ETAs, momentum=MMTs))
-    grid_list.append(dict(hidden_layer_sizes=Hs, alpha=ALPHAs))
+    grid_list.append(dict(activation=ACTs))
+    grid_list.append(dict(solver=SLOs))
+    grid_list.append(dict(learning_rate_init=ETAs))
+    grid_list.append(dict(hidden_layer_sizes=Hs))
     grid_list.append(dict(max_iter=ITRs))
 
-    grid={0:"Activation function & Solver", \
-          1:"Learning rate & Momentam", \
-          2:"Hidden layer size & Regularization parameter", \
-          3: "Max iteration"}
-    print("Select the parameter to search - ", grid, end="")
+    grid={0:"Activation function", \
+          1:"Solver", \
+          2:"Learning rate", \
+          3:"Hidden layer size", \
+          4:"Max iteration"}
+    print("Select the parameters to search (separated by comma) - ", \
+          grid, end="")
+    ans=input(": ").split(",")
+    param_grid=0
+
     try:
-        param_grid=grid_list[int(input(": "))]
+        for g in ans:
+            g=int(g)
+            if param_grid==0: param_grid=grid_list[g]
+            else: param_grid.update(grid_list[g])
     except:
         return 1, 1
-    
+
     # set a classifier for grid search
     clf=GridSearchCV(estimator=classifier, param_grid=param_grid, \
                    n_jobs=-1, cv=ShuffleSplit())
@@ -131,6 +125,8 @@ def parameter_grid(activation="relu", alpha=1, hidden_layer_sizes=(14,),
 def grid_search(X, y, estimator, param_grid, grid_splits=10):
     from sklearn.model_selection import KFold
     from statistics import mode
+    from datetime import datetime
+    
     
     score, bests, lbs, means, modes=[], [], [], [], []
     k_fold=KFold(n_splits=grid_splits)
@@ -157,10 +153,10 @@ def grid_search(X, y, estimator, param_grid, grid_splits=10):
     # append mean and mode
     for k in range (len(bests[0])):
         avgs=(np.array(bests)[:, k]).tolist()
-        try:    modes.append(mode (avgs))
+        try:    modes.append(mode(avgs))
         except: modes.append("N/A")
 
-        try:    means.append(np.mean ([float (avg) for avg in avgs]))
+        try:    means.append(np.mean ([float(avg) for avg in avgs]))
         except: means.append("N/A")
 
     index=["Fold-%2d" % fold for fold in(range(1, grd))]
@@ -173,6 +169,12 @@ def grid_search(X, y, estimator, param_grid, grid_splits=10):
     results=pd.DataFrame(bests, index=index, columns=lbs)
     print("\n", results)
     
+    ans=input("Save the results to a CSV file? (y/n): ")
+    if (ans!="y") or (ans!="Y"):
+        now = datetime.now().strftime("%Y%m%d_%H%M%S")
+        results.to_csv("%sGridSearch_%s.csv" % (VAR.out_path, now), \
+                       header=lbs, index=index, sep=",", mode="a")
+    
     return results
      
 # -------------------------------------------------------------------------
@@ -182,14 +184,14 @@ if __name__ == "__main__":
     X=np.random.rand(50,100)
     y=np.array([0,1,2,3,4]*10)
     
-    act, h_num, max_itr, lr, mmt, alpha, solver, splits=get_parameters()
+    act, h_num, max_itr, lr, solver, splits=get_parameters()
     
     ans=input("Continue? (y/n): ")
     
     if (ans=="y") or (ans=="Y"):
-        param_grid, clf=parameter_grid(activation=act, alpha=alpha, \
-                       hidden_layer_sizes=(h_num,), 
-                       max_iter=max_itr, learning_rate_init=lr, 
-                       momentum=mmt, solver=solver)
+        param_grid, clf=parameter_grid(activation=act, \
+                        hidden_layer_sizes=(h_num,), max_iter=max_itr, \
+                        learning_rate_init=lr, solver=solver)
+
         if param_grid!=1:
             results=grid_search(X, y, clf, param_grid, grid_splits=splits)

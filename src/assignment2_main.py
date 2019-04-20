@@ -129,7 +129,7 @@ def menu():
             X_tr_cmp=encoder.predict(X_tr)
             X_te_cmp=encoder.predict(X_te)           
             print("The number of compressed features:", len(X_all_cmp[0]))
-            ready=5         
+            ready=6
         elif ans==5: # train an MLP
             if ready<ans:
                 print("[ ERROR ] An autoencoder is not trained yet.")
@@ -151,19 +151,17 @@ def menu():
                             val_rate=val_rate, verbose=verbose)
             MLP.plot_mlp_loss_history(histories, pic_file)
         elif ans==6: # grid dsearch using the compressed features
-            if ready<ans:
-                print("[ ERROR ] A classifier is not built yet.")
+            if ready<5:
+                print("[ ERROR ] Features are not compressed yet.")
                 continue
             
-            act, h_num, max_itr, lr, mmt, alpha, solver, splits=\
-                GS.get_parameters()
+            act, h_num, max_itr, lr, solver, splits=GS.get_parameters()
             
             ans=input("Continue? (y/n): ")
             if (ans!="y") and (ans!="Y"): continue 
             param_grid, clf=GS.parameter_grid(activation=act, \
-                           alpha=alpha, hidden_layer_sizes=(h_num,), \
-                           max_iter=max_itr, learning_rate_init=lr, \
-                           momentum=mmt, solver=solver)
+                    hidden_layer_sizes=(h_num,), max_iter=max_itr, \
+                    learning_rate_init=lr, solver=solver)
             if param_grid!=1:
                 GS.grid_search(X_all_cmp, y, clf, param_grid, \
                                grid_splits=splits)  
@@ -181,10 +179,10 @@ def menu():
             ready=10
         elif ans==9: # comparison with PCA
             if ready<5:
-                print("[ ERROR ] Compressed features are not obtained yet.")
+                print("[ ERROR ] Features are not extracted yet.")
                 continue 
             if ae_layers[-1]!=3:
-                print("[ ERROR ] Compressed feature dimentionality " \
+                print("[ ERROR ] Extracted feature dimentionality " \
                       "should be 3, but data", X_tr.shape, "are given.")
                 continue
             CMP.plot_3D(X, X_all_cmp, y)
