@@ -7,6 +7,7 @@ visualise the confusion matrix of the prediction.
 
 Author          : Tomoko Ayakawa
 Created on      : 17 February 2019
+Submitted on    : 21 February 2019 (Assignment 1: Proposal)
 Last modified on: 18 April 2019
 ===========================================================================
 """

@@ -2,7 +2,7 @@
 ===========================================================================
                            c o m p a r i s o n . p y
 ---------------------------------------------------------------------------
-This code is to compare the clasification results by an autoencoder to 
+This code is to compare the clasification results by an autoencoder with
 other classifiers.
 
 Author          : Tomoko Ayakawa
@@ -16,7 +16,6 @@ import numpy as np
 
 sys.path.append("../")
 # import original libraries
-from conf import myVariables as VAR
 import classifier as CLS
 import pca as PCA
 

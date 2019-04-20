@@ -6,12 +6,14 @@ This file contains configurable variables used by other python scripts.
 
 Author          : Tomoko Ayakawa
 Created on      : 17 February 2019
-Last modified on: 19 April 2019
+Submitted on    : 21 February 2019 (Assignment 1: Proposal)
+Last modified on: 20 April 2019
 ===========================================================================
 """
 
 class myVariables():
     import os
+    import numpy as np
     dir_name=os.path.abspath(os.path.join(os.path.dirname(__file__),".."))
     
     # --------------------------------------------------------------------
@@ -87,21 +89,26 @@ class myVariables():
     ae_summary_display=0  # 0:False, 1: True
     
     ## (3) MLP
-    h_num=20               # number of neurons in the hidden layer
+    h_num=25               # number of neurons in the hidden layer
     h_act=0                # activation function (index of act_list)
     out_act=3              # activation function (index of act_list)
     mlp_loss=3             # loss function (index of loss_list)
     mlp_opt=0              # optimizer 0:adam 1:sdg
-    mlp_lr=0.001            # learning rate
+    mlp_lr=0.01            # learning rate
     mlp_momentum=0.9       # momentum
     val_rate=0.2           # validation rate
-    mlp_epoch=20           # training epoch for autoencoders
+    mlp_epoch=100           # training epoch for autoencoders
     mlp_verbose=0          # 0:False, 1: True
-    mlp_summary_display=0  # 0:False, 1: True
+    mlp_summary_display=1  # 0:False, 1: True
     finetune=0             # 0:False, 1: True
-    cv=10                  # number of folds for cross validation
+    cv=5                  # number of folds for cross validation
     
     ## (4) Grid Search
     grid_splits=10          # number of grid split
     alpha=1                # reguralization parameter
     
+    grid_hidden_neurons=[(5, ), (10, ), (15, ), (20, ), (25, ), (30, )]
+    grid_activation=["tanh", "relu"]
+    grid_solver=["sgd", "adam"]
+    grid_iteration=np.linspace(10, 1000, 100, dtype=int)
+    grid_learning_rate=np.logspace(-5, -1, 5)

@@ -6,6 +6,7 @@ This code loads datases and converd them into the same DataFrame format.
 
 Author          : Tomoko Ayakawa
 Created on      : 17 February 2019
+Submitted on    : 21 February 2019 (Assignment 1: Proposal)
 Last modified on: 8 April 2019
 ===========================================================================
 """

@@ -8,12 +8,11 @@ with the selected menu.
 
 Author          : Tomoko Ayakawa
 Created on      : 10 April 2019
-Last modified on: 19 April 2019
+Last modified on: 20 April 2019
 ===========================================================================
 """
 
-import sys
-import keras
+import sys, keras
 sys.path.append("./sub")
 
 # import original libraries
@@ -41,14 +40,13 @@ def menu():
               "    [Build and Train Classifier]\n" \
               "      4) Autoencoder\n" \
               "      5) MLP\n" \
-              "      6) Grid search for optimal parameter\n"
+              "      6) Grid search for MLP optimal parameters\n"
               "    [Evaluation]\n" \
               "      7) Cross Validation of the classifier\n" \
               "      8) Predict and validate with test dataset\n" \
               "    [Comparison]\n" \
-              "      9) PCA vs. Autoencoder: 3D visualisation\n" \
-              "     10) Classification accuracy of DT, NB, SVM and NN \n" \
-              "         with test data\n" \
+              "      9) Classification accuracy of DT, NB, SVM and NN\n" \
+              "     10) PCA vs. Autoencoder: 3D visualisation\n" \
               "    [Quit]\n" \
               "      others) Exit the menu" % ready)
 
@@ -78,7 +76,7 @@ def menu():
                     continue
             if data_err==3: break
             
-            col_names, features_df, targets_df, data_df, pic_file = \
+            col_names, features_df, targets_df, data_df, timestamp = \
                 DATA.load_data(data_id=data_id)
             unique_labels=DATA.verify_data(data_df, targets_df, \
                                            dispaly_range=False)
@@ -89,6 +87,7 @@ def menu():
                 print("[ ERROR ] Data is not loaded yet.")
                 continue
             features, classes=PREP.get_small_data(features_df, targets_df)
+            pic_file=timestamp+"(%d)" % len(features)
             ready=2
         elif ans==2: # pre-process the data
             if ready<ans:
@@ -112,6 +111,7 @@ def menu():
             # select parameters for autoencoder
             ae_layers, mode, act, opt, loss, dropout, epochs, verbose, \
                 summary_display=AE.get_parameters(data_id)
+            pic_file=timestamp+"(%d_%.1f)" % (len(features), dropout)
             ans=input("Continue? (y/n): ")
             if (ans!="y") and (ans!="Y"): continue
         
@@ -125,9 +125,7 @@ def menu():
             AE.plot_ae_loss_history(histories, mode, pic_file)
             
             # obtain compressed features
-            X_all_cmp=encoder.predict(X)
-            X_tr_cmp=encoder.predict(X_tr)
-            X_te_cmp=encoder.predict(X_te)           
+            X_all_cmp=encoder.predict(X)          
             print("The number of compressed features:", len(X_all_cmp[0]))
             ready=6
         elif ans==5: # train an MLP
@@ -169,39 +167,42 @@ def menu():
             if ready<ans:
                 print("[ ERROR ] A classifier is not built yet.")
                 continue
-            accs, fscores=MLP.cross_validation(model, X, y, epochs=epochs)
+            accs, fscores=MLP.cross_validation(model, X, y, \
+                          unique_labels, epochs=epochs)
         elif ans==8: # cross validation
             if ready<ans:
                 print("[ ERROR ] A classifier is not built yet.")
                 continue 
             pred=MLP.evaluation(model, X_tr, y_tr, X_te, y_te, \
-                                         pic_file)
+                                unique_labels, pic_file)
             ready=10
-        elif ans==9: # comparison with PCA
-            if ready<5:
-                print("[ ERROR ] Features are not extracted yet.")
-                continue 
-            if ae_layers[-1]!=3:
-                print("[ ERROR ] Extracted feature dimentionality " \
-                      "should be 3, but data", X_tr.shape, "are given.")
-                continue
-            CMP.plot_3D(X, X_all_cmp, y)
-        elif ans==10: # comparison with other classifiers
+        elif ans==9: # comparison with other classifiers
             if ready<ans:
                 print("[ ERROR ] Obtain the classification result of "\
                       "the autoencoder (Menu 8).")
                 continue 
-            # original data (uncompressed)
-            ans=input("Use the original (uncompressed) data? (y/n): ")
-            if (ans!="y") and (ans!="Y"): continue 
             CMP.performance_comparison(pred, X_tr, X_te, y_tr, y_te, \
-                                       pic_file, data_id)
-            # compressed data
-            ans=input("Use the compressed data? (y/n): ")
-            if (ans!="y") and (ans!="Y"): continue 
-            CMP.performance_comparison(pred, X_tr_cmp, X_te_cmp, y_tr, \
-                                       y_te, pic_file, data_id)
-            continue   
+                             timestamp+"(%d)" % len(features), data_id) 
+        elif ans==10: # comparison with PCA
+            if ready<5:
+                print("[ ERROR ] Features are not extracted yet.")
+                continue 
+            # if the compressed features have more than three dimensions, 
+            # retrain the autoencoder
+            if ae_layers[-1]!=3:
+                print("The shape of the extracted feature should be " \
+                      "(num_samples, 3) but data", X_all_cmp.shape, \
+                      "are given.")
+                ans=input("Retrain the autoencoder? (y/n): ")
+                if (ans!="y") and (ans!="Y"): continue 
+                ae_layers.append(5)
+                ae_layers.append(3)
+                encoder, histories=AE.autoencoder(X, layers=ae_layers, \
+                        mode=mode, act=act, opt=opt, loss=loss, \
+                        dropout=dropout, epochs=epochs, verbose=verbose, \
+                        summary_display=summary_display)
+                X_all_cmp=encoder.predict(X)
+            CMP.plot_3D(X, X_all_cmp, y)
 # -------------------------------------------------------------------------
 # Allow the programme to be ran from the command line.
 # -------------------------------------------------------------------------

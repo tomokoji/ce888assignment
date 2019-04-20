@@ -10,9 +10,6 @@ Last modified on: 18 April 2019
 ===========================================================================
 """
 import sys
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
 
 sys.path.append("../")
 # import original libraries
@@ -31,7 +28,7 @@ def msg(num_para):
 def ae_type(i, j, default): # Autoencoder type
     try:
         mode=int(input("[Parameter %d/%d: Autoencoder type] "\
-             "0:Normal or 1:Stacked (default=%d): " % (i, j, default)))
+             "0:Basic or 1:Stacked (default=%d): " % (i, j, default)))
         if mode not in [0,1]: mode=default
     except:
         mode=default

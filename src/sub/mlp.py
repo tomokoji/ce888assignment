@@ -7,7 +7,7 @@ classifier (discriminative neural network).
 
 Author          : Tomoko Ayakawa
 Created on      : 17 April 2019
-Last modified on: 18 April 2019
+Last modified on: 20 April 2019
 ===========================================================================
 """
 import sys
@@ -101,10 +101,14 @@ def build_mlp(encoder, num_in, num_out, finetune=VAR.finetune, \
     
     # reconstruct the autoencoder
     model=Sequential()
-    for e in encoder.layers:
-        if finetune==1: e.trainable=True
-        elif finetune==0: e.trainable=False
-        model.add(e)
+    if finetune==0:
+        encoder_mod=Sequential()
+        for e in encoder.layers:
+            e.trainable=False
+            encoder_mod.add(e)
+        model.add(encoder_mod)
+    else:
+        model.add(encoder)
         
     model.add(Dense(h_num, input_dim=num_in, activation=h_act))
     model.add(Dense(num_out, activation=out_act))
@@ -172,21 +176,21 @@ def plot_mlp_loss_history(histories, pic_file):
     plt.show ()
     
     if save==True:
-        fig.savefig("%s%sae_loss history.png" % \
+        fig.savefig("%s%s_MLP_loss history.png" % \
                     (VAR.out_path, pic_file), bbox_inches='tight')  
         
 # -------------------------------------------------------------------------
 # Cross validation of the model to obrain accuracy with 95% confidence 
 # interval.
 # -------------------------------------------------------------------------
-def cross_validation(estimator, X, y, epochs=VAR.mlp_epoch):
+def cross_validation(estimator, X, y, unique_labels, epochs=VAR.mlp_epoch):
     from sklearn.metrics import accuracy_score, f1_score
     accs, fscores=[], []
     
     cv=PARA.integer(1, 1, VAR.cv, "Number of cross validation folds")
     
     # split the data into cv-folds
-    val_size=len(X)//cv+1
+    val_size=len(X)//cv
     X_folds, y_folds=[], []
     for i in range(cv):
         s=i*val_size
@@ -211,7 +215,7 @@ def cross_validation(estimator, X, y, epochs=VAR.mlp_epoch):
         
         # make a prediction and decode the resutls
         pred=estimator.predict(te_X)
-        pred_df=pd.DataFrame(pred, columns=np.unique(te_y))
+        pred_df=pd.DataFrame(pred, columns=unique_labels)
         pred=pred_df.idxmax(axis=1)
         
         accs.append(accuracy_score(te_y, pred))
@@ -225,11 +229,10 @@ def cross_validation(estimator, X, y, epochs=VAR.mlp_epoch):
                               fscores.mean(), fscores.std()*2))
    
     return accs, fscores
-
 # -------------------------------------------------------------------------
 # Train the 
 # -------------------------------------------------------------------------
-def evaluation(estimetor, X_tr, y_tr, X_te, y_te, pic_file):
+def evaluation(estimetor, X_tr, y_tr, X_te, y_te, unique_labels, pic_file):
     from sklearn import metrics
     
     # fit the model with training data
@@ -237,7 +240,7 @@ def evaluation(estimetor, X_tr, y_tr, X_te, y_te, pic_file):
 
     # predict the classes of test data
     pred=estimetor.predict(X_te)
-    pred_df=pd.DataFrame(pred, columns=np.unique(y_te))
+    pred_df=pd.DataFrame(pred, columns=unique_labels)
     pred=pred_df.idxmax(axis=1)
     
     # evaluattion metrics
@@ -251,7 +254,8 @@ def evaluation(estimetor, X_tr, y_tr, X_te, y_te, pic_file):
     
     # display confusion matrix
     CLS.plot_confusion_matrix(y_te, pred, np.unique(y_te), \
-            pic_file, "%s_MLP (%d)" % (pic_file, len(X_tr)), "MLP")
+            pic_file, "%s_MLP (%d training, %d test)" % \
+            (pic_file, len(X_tr), len(X_te)), "MLP")
 
     return pred
 # -------------------------------------------------------------------------
@@ -260,8 +264,9 @@ def evaluation(estimetor, X_tr, y_tr, X_te, y_te, pic_file):
 if __name__ == "__main__":
     import autoencoder as AE
     
-    X=np.random.rand(200,100)
-    y=[0,1,2,3,4]*40
+    X=np.random.rand(50,100)
+    y=[0,1,2,3,4]*10
+    unique_labels=np.unique(y)
     
     finetune, h_num, h_act, out_act, opt, loss, epochs, val_rate, \
         verbose, summary_display=get_parameters()
@@ -288,10 +293,12 @@ if __name__ == "__main__":
     
         plot_mlp_loss_history(histories, "test")
 
-        accs, fscores=cross_validation(model, X, y, epochs=epochs)
+        accs, fscores=cross_validation(model, X, y, unique_labels, \
+                                       epochs=epochs)
         
         # test the model
         from sklearn.model_selection import train_test_split
         X_tr, X_te, y_tr, y_te=train_test_split(X, y, test_size=0.2)
-        pred=evaluation(model, X_tr, y_tr, X_te, y_te, "test_2019")
+        pred=evaluation(model, X_tr, y_tr, X_te, y_te, unique_labels, \
+                        "test_2019")
         

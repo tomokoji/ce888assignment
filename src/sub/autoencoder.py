@@ -10,7 +10,6 @@ Last modified on: 18 April 2019
 ===========================================================================
 """
 import sys
-import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 

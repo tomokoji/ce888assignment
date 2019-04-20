@@ -6,7 +6,7 @@ This code is to carry out grid-search for the optimal parameters of MLP.
 
 Author          : Tomoko Ayakawa
 Created on      : 18 April 2019
-Last modified on: 19 April 2019
+Last modified on: 20 April 2019
 ===========================================================================
 """
 import sys
@@ -80,12 +80,12 @@ def parameter_grid(activation="relu", hidden_layer_sizes=(20,),
                    
     
     # set parameter grids
-    Hs=[(5, ), (10, ), (15, ), (20, ), (25, ), (30, )]
-    ACTs=["tanh", "relu"]
-    SLOs=["sgd", "adam"]
-    ITRs=np.linspace(10, 1000, 100, dtype=int)
-    ETAs=np.logspace(-5, -1, 5)
-
+    Hs=VAR.grid_hidden_neurons
+    ACTs=VAR.grid_activation
+    SLOs=VAR.grid_solver
+    ITRs=VAR.grid_iteration
+    ETAs=VAR.grid_learning_rate
+    
     grid_list=[]
     grid_list.append(dict(activation=ACTs))
     grid_list.append(dict(solver=SLOs))
@@ -143,6 +143,7 @@ def grid_search(X, y, estimator, param_grid, grid_splits=10):
 
         for key in param_grid.keys():
             method=getattr(estimator.best_estimator_, key)
+            if isinstance(method, tuple): method=method[0]
             best.append (method)
             if len(lbs)!=len(param_grid): lbs.append("%s" % key)
         best.append(score[-1])

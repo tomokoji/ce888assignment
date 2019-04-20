@@ -8,6 +8,7 @@ This code is written in reference to jupyter notebook for CE888 Lab 6.
 
 Author          : Tomoko Ayakawa
 Created on      : 18 February 2019
+Submitted on    : 21 February 2019 (Assignment 1: Proposal)
 Last modified on: 19 February 2019
 ===========================================================================
 """
