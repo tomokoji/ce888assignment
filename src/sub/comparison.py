@@ -7,7 +7,7 @@ other classifiers.
 
 Author          : Tomoko Ayakawa
 Created on      : 19 April 2019
-Last modified on: 19 April 2019
+Last modified on: 21 April 2019
 ===========================================================================
 """
 import sys
@@ -57,7 +57,7 @@ def performance_comparison(pred_ae, X_tr, X_te, y_tr, y_te, \
                          columns=["Accuracy", "Wighted F-1"])
         
     print(results)
-    
+
 # -------------------------------------------------------------------------
 # Compare 3D plot by PCA Autoencoder
 # -------------------------------------------------------------------------

@@ -180,7 +180,7 @@ def plot_mlp_loss_history(histories, pic_file):
                     (VAR.out_path, pic_file), bbox_inches='tight')  
         
 # -------------------------------------------------------------------------
-# Cross validation of the model to obrain accuracy with 95% confidence 
+# Cross validation of the model to obtain accuracy with 95% confidence 
 # interval.
 # -------------------------------------------------------------------------
 def cross_validation(estimator, X, y, unique_labels, epochs=VAR.mlp_epoch):
