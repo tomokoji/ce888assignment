@@ -7,7 +7,8 @@ into the format which is appropriate for the following process.
 
 Author          : Tomoko Ayakawa
 Created on      : 5 February 2019
-Last modified on: 17 February 2019
+Submitted on    : 21 February 2019 (Assignment 1: Proposal)
+Last modified on: 22 April 2019
 ===========================================================================
 """
 import os.path, sys
@@ -59,7 +60,14 @@ def get_data(fname):
     # split the data into features and targets
     features_df = data_df[data_df.columns[:-1]]
     targets_df = data_df[data_df.columns[-1]]
-    
+
+    # convert the features to dummy data
+    ans=input("Convert nominal features to dummies?(y/n): ")
+    if (ans=="y") or (ans=="Y"):
+        features_df=pd.get_dummies(features_df.astype(str))
+        col_names=features_df.columns
+        data_df=features_df.join(pd.DataFrame(targets_df))
+
     return col_names, features_df, targets_df, data_df
 # -------------------------------------------------------------------------
 # Allow the programme to be ran from the command line.

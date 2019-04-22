@@ -79,7 +79,7 @@ class myVariables():
     ae_dropout=0    # dropout rate for autoencoders
     ae_layers={0: [500, 400, 300, 200, 100, 50, 25, 10],  # number of 
                1: [50, 40, 30, 20, 10],                   # neurons of 
-               2: [25, 20, 105, 10]}                      # each layer
+               2: [25, 20, 15, 10]}                       # each layer
     ae_act=0            # activation function (index of act_list)
     ae_loss=0           # loss function (index of loss_list)
     ae_opt=0            # optimizer 0:adam 1:sdg

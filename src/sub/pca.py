@@ -59,6 +59,9 @@ def pca(X, y, labels, pic_file, PCA=True):
         fig.savefig("%s%s_pca.png" % (VAR.out_path, pic_file), \
                 bbox_inches="tight")
 
+# -------------------------------------------------------------------------
+# Set the predictors.
+# -------------------------------------------------------------------------
 def variance(X, pic_file):
     pca = sklearnPCA()
     X_pca = pca.fit_transform(X)
