@@ -2,8 +2,7 @@
 ===========================================================================
                                   m l p . p y
 ---------------------------------------------------------------------------
-This code is to build, train and evaluate an MLP as a 
-classifier (discriminative neural network).
+This code is to build, train and evaluate an MLP as a classifier.
 
 Author          : Tomoko Ayakawa
 Created on      : 17 April 2019
