@@ -2,7 +2,7 @@
 ===========================================================================
                            c o m p a r i s o n . p y
 ---------------------------------------------------------------------------
-This code is to compare the clasification results by an autoencoder with
+This code is to compare the classification results by an autoencoder with
 other classifiers.
 
 Author          : Tomoko Ayakawa

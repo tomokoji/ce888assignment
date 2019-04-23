@@ -2,7 +2,7 @@
 ===========================================================================
                                   m l p . p y
 ---------------------------------------------------------------------------
-This code is to build, train and evaluate an malti layer perceotron as a 
+This code is to build, train and evaluate an MLP as a 
 classifier (discriminative neural network).
 
 Author          : Tomoko Ayakawa
@@ -32,7 +32,7 @@ def get_parameters():
     i=1
     # Conduct fine tune of weights between layers of the autoencoder
     finetune=PARA.display(i, num_para, VAR.finetune, \
-                          "Finetune autoencoder")
+                          "Fine-tune autoencoder")
     
     # Number of neurons of the hidden layer
     i+=1
@@ -55,7 +55,7 @@ def get_parameters():
     i+=1
     loss=PARA.loss(i, num_para, VAR.mlp_loss)
        
-    # Trainig epochs
+    # Training epochs
     i+=1
     epochs=PARA.integer(i, num_para, VAR.mlp_epoch, "Training epochs")
     
@@ -73,7 +73,7 @@ def get_parameters():
                                  "Summary display")
     
     print("\nParameters for the MLP are")
-    print(" 1. Finetune: : %d(%s)" % (finetune, VAR.yesno[finetune]))
+    print(" 1. Fine-tune: : %d(%s)" % (finetune, VAR.yesno[finetune]))
     print(" 2. Number of neurons in the hidden layer: %d" % (h_num))
     print(" 3. Hidden layer activation function: %s" % (h_act))
     print(" 4. Output layer activation function: %s" % (out_act))
@@ -124,7 +124,7 @@ def build_mlp(encoder, num_in, num_out, finetune=VAR.finetune, \
 # ------------------------------------------------------------------------
 def train_mlp(X, y, model, epochs=VAR.mlp_epoch, val_rate=VAR.val_rate, \
               verbose=VAR.mlp_verbose):  
-    # Replate the target with dummy values
+    # Replace the target with dummy values
     y=multi_class(y)
     
     # train the mlp
@@ -213,7 +213,7 @@ def cross_validation(estimator, X, y, unique_labels, epochs=VAR.mlp_epoch):
         
         train_mlp(tr_X, tr_y, estimator, epochs=epochs, verbose=0)
         
-        # make a prediction and decode the resutls
+        # make a prediction and decode the results
         pred=estimator.predict(te_X)
         pred_df=pd.DataFrame(pred, columns=unique_labels)
         pred=pred_df.idxmax(axis=1)
@@ -243,7 +243,7 @@ def evaluation(estimetor, X_tr, y_tr, X_te, y_te, unique_labels, pic_file):
     pred_df=pd.DataFrame(pred, columns=unique_labels)
     pred=pred_df.idxmax(axis=1)
     
-    # evaluattion metrics
+    # evaluation metrics
     acc=metrics.accuracy_score(y_te, pred)
     f=metrics.f1_score(y_te, pred, average='weighted')
     results=pd.DataFrame([[acc, f]], index=["Autoencoder"], \
@@ -301,4 +301,3 @@ if __name__ == "__main__":
         X_tr, X_te, y_tr, y_te=train_test_split(X, y, test_size=0.2)
         pred=evaluation(model, X_tr, y_tr, X_te, y_te, unique_labels, \
                         "test_2019")
-        

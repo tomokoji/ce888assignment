@@ -2,7 +2,7 @@
 ===========================================================================
                           l o a d _ d a t a . p y
 ---------------------------------------------------------------------------
-This code loads datases and converd them into the same DataFrame format.
+This code loads datasets and convert them into the same DataFrame format.
 
 Author          : Tomoko Ayakawa
 Created on      : 17 February 2019
@@ -22,7 +22,7 @@ import load_spam as SPAM
 from conf import myVariables as VAR
 
 # -------------------------------------------------------------------------
-# Get timestamp for picture file name.
+# Get time stamp for picture file name.
 # -------------------------------------------------------------------------
 def timestamp():
     from time import gmtime, strftime

@@ -4,7 +4,7 @@
 ---------------------------------------------------------------------------
 This code carries out PCA, plot the data sets in 3D and display information
 (variance) provided by principal components.
-This code is written in reference to jupyter notebook for CE888 Lab 6. 
+This code is written in reference to Jupiter notebook for CE888 Lab 6. 
 
 Author          : Tomoko Ayakawa
 Created on      : 18 February 2019

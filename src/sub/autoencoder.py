@@ -51,7 +51,7 @@ def get_parameters(data_id):
     i+=1
     dropout=PARA.floatvalue(i, num_para, VAR.ae_dropout, "Dropout rate")
        
-    # Trainig epochs
+    # Training epochs
     i+=1
     epochs=PARA.integer(i, num_para, VAR.ae_epoch, "Training epochs")
 
@@ -182,10 +182,10 @@ def autoencoder(X, layers, mode, act=VAR.ae_act, opt=VAR.ae_opt, \
             # update the input_holder
             tmp_holder=Input(shape=(layers_copy[i+1],))
         
-            # store the trainined layer in a list
+            # store the trained layer in a list
             stk_encoders.append(encoder)
             
-        # connect traind encoder layers as 'encode'
+        # connect trained encoder layers as 'encode'
         encoder=Sequential()
         for e in stk_encoders: encoder.add(e)
         

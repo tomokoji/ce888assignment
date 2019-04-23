@@ -19,7 +19,7 @@ sys.path.append("../")
 from conf import myVariables as VAR
 
 # -------------------------------------------------------------------------
-# Show histograms of each colomn in the data
+# Show histograms of each column in the data
 # -------------------------------------------------------------------------
 def histogram(data_df, pic_file, mode):
     num_cols = len(data_df.columns)

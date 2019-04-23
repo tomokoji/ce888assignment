@@ -35,7 +35,7 @@ def menu():
               "    [Prepare Data]\n" \
               "      0) Load Data\n" \
               "      1) Obtain small data\n" \
-              "      2) Normalise/standerdise the data\n" \
+              "      2) Normalise/standardize the data\n" \
               "      3) Split the data to training and test datasets\n" \
               "    [Build and Train Classifier]\n" \
               "      4) Autoencoder\n" \
@@ -148,7 +148,7 @@ def menu():
             histories=MLP.train_mlp(X, y, model, epochs=epochs, \
                             val_rate=val_rate, verbose=verbose)
             MLP.plot_mlp_loss_history(histories, pic_file)
-        elif ans==6: # grid dsearch using the compressed features
+        elif ans==6: # grid search using the compressed features
             if ready<5:
                 print("[ ERROR ] Features are not compressed yet.")
                 continue

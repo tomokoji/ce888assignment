@@ -53,7 +53,7 @@ def get_small_data(X, y):
             train_test_split(X, y, test_size=n/num_rows)
     
     print (" - Number of features: %d\n" \
-           " - Minimul data size : %d\n" \
+           " - Minimal data size : %d\n" \
            " - Specified size    : %d\n" % (num_cols, minimal, n))
     
     return features, targets

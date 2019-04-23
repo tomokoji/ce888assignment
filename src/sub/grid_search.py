@@ -19,7 +19,7 @@ from conf import myVariables as VAR
 import nn_parameters as PARA
 
 # -------------------------------------------------------------------------
-# Define the parameters for the autorncoders/MLP. When skipped or an  
+# Define the parameters for the autoencoder/MLP. When skipped or an  
 # invalid value is given, the default values that are defined in conf.py 
 # are used.
 # -------------------------------------------------------------------------
@@ -31,9 +31,9 @@ def get_parameters():
     i=1
     act=PARA.activation(i, num_para, VAR.h_act, "")
 
-    # Number of hideen neurons
+    # Number of hidden neurons
     i+=1
-    h_num=PARA.integer(i, num_para, VAR.h_num, "Hidedn layer size")
+    h_num=PARA.integer(i, num_para, VAR.h_num, "Hidden layer size")
     
     # Maximum iteration
     i+=1

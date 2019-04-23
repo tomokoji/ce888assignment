@@ -116,7 +116,7 @@ def loss(i, j, default):  # Loss function
     
     return loss
     
-def floatvalue(i, j, default, item): # Floatinf point values
+def floatvalue(i, j, default, item): # Floating point values
     try:
         fl=float(input("[Parameter %d/%d: %s] 0<=rate<1 " \
                               "(default=%f): " % (i, j, item, default)))
@@ -136,7 +136,7 @@ def validation(i, j, default): # Dropout rate
     
     return val
        
-def integer(i, j, default, item): # Trainig epochs
+def integer(i, j, default, item): # Training epochs
     try:
         epochs=int(input("[Parameter %d/%d: %s] "\
                          "(default=%d): " % (i, j, item, default)))
