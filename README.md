@@ -1,5 +1,5 @@
 # ce888assignment
-This repository contains deliverables of CE888 assignment1. <br>
+This repository contains deliverables of CE888 assignment 1 and 2. <br>
 
 ## Contents
 1. data: training data set collected for the assignment
@@ -16,7 +16,7 @@ This repository contains deliverables of CE888 assignment1. <br>
     - **conf.py**: configurable variables used by the python scripts
     - sub: directory containing sub modules called by *assignment1_main.py* and *assignment2_main.py* <br>
 	
-	|file name|Developed for assignment1|Modified for assignment2|Developed for assignment2|
+	|File name|Developed for assignment1|Modified for assignment2|Developed for assignment2|
 	|-----|-----|-----|-----|
 	|load_data.py|Yes|Yes||
 	|load_human_activity.py|Yes|-|-|
