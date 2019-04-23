@@ -16,23 +16,23 @@ This repository contains deliverables of CE888 assignment 1 and 2. <br>
     - **conf.py**: configurable variables used by the python scripts
     - sub: directory containing sub modules called by *assignment1_main.py* and *assignment2_main.py* <br>
 	
-	|File name|Developed for assignment1|Modified for assignment2|Developed for assignment2|
-	|-----|-----|-----|-----|
-	|load_data.py|Yes|Yes||
-	|load_human_activity.py|Yes|-|-|
-	|load_spam.py|Yes|-||
-	|load_phishing.py|Yes|Yes|-|
-	|histogram.py|Yes|-|-|
-	|correlation.py|Yes|-|-|
-	|feature_importance.py|Yes|-|-|
-	|classifier.py|Yes|Yes|-|
-	|pca.py|Yes|Yes|-|
-	|preprocess.py|-|-|Yes|
-	|nn_parameters.py|-|-|Yes|
-	|autoencoder.py|-|-|Yes|
-	|grid_search.py|-|-|Yes|
-	|mlp.py|-|-|Yes|
-	|comparison.py|-|-|Yes|
+	|#|File name|Developed for assignment1|Modified for assignment2|Developed for assignment2|
+	|-----|-----|-----|-----|-----|
+	|1|load_data.py|Yes|Yes||
+	|2|load_human_activity.py|Yes|-|-|
+	|3|load_spam.py|Yes|-||
+	|4|load_phishing.py|Yes|Yes|-|
+	|5|histogram.py|Yes|-|-|
+	|6|correlation.py|Yes|-|-|
+	|7|feature_importance.py|Yes|-|-|
+	|8|classifier.py|Yes|Yes|-|
+	|9|pca.py|Yes|Yes|-|
+	|10|preprocess.py|-|-|Yes|
+	|11|nn_parameters.py|-|-|Yes|
+	|12|autoencoder.py|-|-|Yes|
+	|13|grid_search.py|-|-|Yes|
+	|14|mlp.py|-|-|Yes|
+	|15|comparison.py|-|-|Yes|
 	
 3. output_ass1: png files of data plot that are created for the assignment 1
 4. output_ass2: png files of data plot that are created for the assignment 2
