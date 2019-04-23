@@ -15,6 +15,7 @@ This repository contains deliverables of CE888 assignment1. <br>
 		- **assignment2_for_demo.ipynb**: jupyter notebook for demo
     - **conf.py**: configurable variables used by the python scripts
     - sub: directory containing sub modules called by *assignment1_main.py* and *assignment2_main.py* <br>
+	
 	|file name|Developed for assignment1|Modified for assignment2|Developed for assignment2|
 	|-----|-----|-----|-----|
 	|load_data.py|Yes|Yes||
@@ -32,14 +33,15 @@ This repository contains deliverables of CE888 assignment1. <br>
 	|grid_search.py|-|-|Yes|
 	|mlp.py|-|-|Yes|
 	|comparison.py|-|-|Yes|
+	
 3. output_ass1: png files of data plot that are created for the assignment 1
 4. output_ass2: png files of data plot that are created for the assignment 2
 
 ## Usage
 The programme can be run  in *src* directory from command line as:
- `python3 assignment1_main.py`
+ `python3 assignment2_main.py`
 <br>
-*assignment1_main.py* calls the menus to load and analyse the data.
+*assignment2_main.py* calls the menus to load the data, build an autoencoder and a classifier, evaluate and compare the results.
 
 ## Demo
-Demonstration of the programme is available on *ce888_assignment1_for_demo.ipynb* in *src* directory.
+Demonstration of the programme is available on *ce888_assignment2_for_demo.ipynb* in *src* directory.
